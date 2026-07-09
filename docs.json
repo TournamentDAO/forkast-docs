@@ -1,6 +1,7 @@
 {
   "$schema": "https://jamdesk.com/docs.json",
-  "name": "Documentation",
+  "name": "Forkast",
+  "projectId": "Yxt7UUeqKEIWkwPinoPc",
   "theme": "jam",
   "colors": {
     "primary": "#635BFF",
