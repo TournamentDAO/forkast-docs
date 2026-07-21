@@ -184,6 +184,9 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: 'Authenticate with a Web3 wallet. Submit the wallet-signed login message together with
+        your session ID to receive a JWT access token, refresh token, and user record. Pass the token
+        as `Authorization: Bearer <token>` on all authenticated endpoints.'
   /user/profile:
     get:
       summary: Get user profile
@@ -315,6 +318,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns the authenticated user's profile, including display name, avatar, wallet and
+        proxy-wallet addresses, and account preference flags.
   /user/profit:
     get:
       summary: Get user profit
@@ -427,6 +432,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns profit statistics for a user. Defaults to the authenticated user; pass `userId`
+        to look up another account's public profit stats.
   /trades/volume:
     get:
       summary: Get user trade volume
@@ -558,6 +565,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns the total traded volume for a user, used for volume-based stats and leaderboard
+        calculations.
   /activities/count-traded:
     get:
       summary: Get user traded count
@@ -689,6 +698,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns the number of trades a user has executed on the platform.
   /markets/get-by-slug/{slug}:
     get:
       summary: Get event by slug
@@ -882,6 +892,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Fetches a single event by its URL slug, including its markets, outcomes, resolution
+        status, and metadata.
   /orderbook:
     get:
       summary: Get order book
@@ -990,6 +1002,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: 'Returns the live order book (bids and asks with price levels and sizes) for a market
+        outcome. `outcomeType` selects the side: 0 = Yes, 1 = No.'
   /token-price:
     get:
       summary: Get token prices
@@ -1071,6 +1085,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns current outcome-token prices for a market, optionally filtered by order side.
   /markets:
     get:
       summary: List events
@@ -1255,6 +1270,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Lists prediction-market events with pagination. Each event includes its markets, outcomes,
+        and current pricing snapshot.
   /balance/{tokenId}/outcomes:
     get:
       summary: Get outcome balances
@@ -1382,6 +1399,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns the authenticated user's share balances for each outcome of the given market
+        token.
   /balance:
     get:
       summary: Get user balances
@@ -1510,6 +1529,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns the authenticated user's Trading Credit balances available for placing orders.
   /positions:
     get:
       summary: Get positions
@@ -1666,6 +1686,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Lists the authenticated user's positions with market/outcome filters and pagination,
+        including size, average price, and current value.
   /positions/signature-discount:
     get:
       summary: Get signature discount
@@ -1778,6 +1800,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Returns a signed fee-discount voucher (signature, expiration, percent) for the authenticated
+        wallet, which can be attached to order placement to apply the discount.
   /user/merge-position:
     post:
       summary: Merge position
@@ -1962,6 +1986,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Merges a full set of complementary outcome tokens back into collateral via the Conditional
+        Tokens Framework. Requires a Gnosis Safe transaction signature (`signature` + `dataSign`).
   /positions/redeem:
     post:
       summary: Redeem positions
@@ -2142,6 +2168,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Redeems the authenticated user's winning positions in resolved markets. Requires a
+        Gnosis Safe transaction signature (`signature` + `dataSign`) authorizing the on-chain settlement.
   /user/split-position:
     post:
       summary: Split position
@@ -2321,6 +2349,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Splits collateral into a full set of outcome tokens via the Conditional Tokens Framework.
+        Requires a Gnosis Safe transaction signature (`signature` + `dataSign`).
   /order/cancel-order/market/all:
     post:
       summary: Cancel all orders by market ID
@@ -2446,6 +2476,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Cancels all of the authenticated wallet's open orders in the given market.
   /order/cancel-order/{outcomeId}/all:
     post:
       summary: Cancel all orders by outcome ID
@@ -2571,6 +2602,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Cancels all of the authenticated wallet's open orders for the given outcome.
   /order/cancel-order/{orderId}:
     post:
       summary: Cancel order by ID
@@ -2727,6 +2759,7 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Cancels a specific open order by its ID. Only the order's owner can cancel it.
   /order:
     get:
       summary: Get orders
@@ -2925,6 +2958,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Lists orders for the authenticated wallet, filtered by outcome and order status, with
+        pagination.
   /order/place/bulk/v1:
     post:
       summary: Place bulk orders
@@ -3303,6 +3338,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Places multiple signed limit orders in a single request. Each entry carries its own
+        EIP-712-signed order object; the response reports per-order results.
   /order/place/v3:
     post:
       summary: Place single order
@@ -3646,6 +3683,9 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Places a single limit order. Send the order parameters (token, side, price, amount)
+        together with the EIP-712-signed CTF Exchange order object produced by the SDK's order-signature
+        helper.
   /category:
     get:
       summary: List categories
@@ -3730,6 +3770,8 @@ paths:
                 description: Standard error response from NestJS
                 example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
                   Error"}'
+      description: Lists the market categories (e.g. esports, crypto, sports) used to organize events
+        on Forkast.
 components:
   securitySchemes:
     bearerAuth:

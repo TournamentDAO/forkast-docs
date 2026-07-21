@@ -1,6 +1,7 @@
 {
   "$schema": "https://jamdesk.com/docs.json",
   "name": "Forkast",
+  "description": "Documentation for Forkast, the prediction market for esports and crypto \u2014 user guides, SDK integration, and full REST API reference.",
   "projectId": "Yxt7UUeqKEIWkwPinoPc",
   "theme": "jam",
   "colors": {
