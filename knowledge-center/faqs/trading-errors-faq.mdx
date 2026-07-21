@@ -1,5 +1,5 @@
 ---
-title: Trading Errors FAQ
+title: "❗ Trading Errors FAQ"
 description: >-
   Find solutions to common trading errors like insufficient balance, limit price
   issues, order minimums, and wallet signature failures in this FAQ.
@@ -7,7 +7,7 @@ description: >-
 
 ## ⚠️ Common Order Errors
 
-### "Amount/Shares Required" or "Must be Greater than 0"
+### ❌ "Amount/Shares Required" or "Must be Greater than 0"
 
 This error appears when you haven't entered an amount or entered zero. Make sure to:
 
@@ -15,22 +15,22 @@ This error appears when you haven't entered an amount or entered zero. Make sure
 - Use positive numbers only
 - Include the amount you want to trade
 
-### "Minimum is 1 share" or "Minimum 1 shares for limit orders"
+### ❌ "Minimum is 1 share" or "Minimum 1 shares for limit orders"
 
 All orders must be for at least 1 share. This ensures meaningful market participation. For buy orders, adjust your amount so that amount ÷ price ≥ 1 share.
 
-### "Insufficient balance"
+### ❌ "Insufficient balance"
 
 You're trying to place an order that exceeds your available balance. To fix this:
 
 - For buy orders: Add more funds to your account or reduce your order size
 - For sell orders: Make sure you have enough shares to sell
 
-### "Minimum buy order value should $0.50"
+### ❌ "Minimum buy order value should $0.50"
 
 - At the minimum, the total value of an order must be above 50 cents. 
 
-### "You can only buy $x.y"
+### ❌ "You can only buy $x.y"
 
 - The total $ amount/value the user can hold in 1 market is capped at $5000. 
 - If user tries to execute orders beyond this cap, the UI would show them the difference i.e. the value they can still execute ($.xy)
@@ -39,7 +39,7 @@ You're trying to place an order that exceeds your available balance. To fix this
 
 ## 🎯 Limit Order Specific
 
-### "Limit price is required" or "Limit price must be greater than 0"
+### ❌ "Limit price is required" or "Limit price must be greater than 0"
 
 When placing a limit order, you must:
 
@@ -47,13 +47,13 @@ When placing a limit order, you must:
 - Use a price greater than zero
 - Include the price you're willing to buy/sell at
 
-### "Expiration time is in the past."
+### ❌ "Expiration time is in the past."
 
 The expiration time you've set for your limit order is in the past. Choose a future time for your order to remain valid.
 
 ## ⚠️ Market Status Errors
 
-### "No matching order found in the order book. Please try again later."
+### ❌ "No matching order found in the order book. Please try again later."
 
 This occurs with market orders when there are no matching orders available. Try:
 
@@ -61,7 +61,7 @@ This occurs with market orders when there are no matching orders available. Try:
 - Waiting for more market participants
 - Adjusting your price point
 
-### "Cannot place order because event is inactive/deleted"
+### ❌ "Cannot place order because event is inactive/deleted"
 
 The market you're trying to trade on is no longer active. This can happen if:
 
@@ -73,14 +73,14 @@ Refresh your page to see the current market status.
 
 ## 🛠️ Technical Issues
 
-### "User rejected request. Make sure your browser is allowing popups."
+### ❌ "User rejected request. Make sure your browser is allowing popups."
 
 This happens when you (or your browser) decline the wallet signature request. To place orders:
 
 - Allow popups in your browser
 - Accept the signature request in your wallet
 
-### "A signing error occurred, possibly due to a duplicated order. Please try again."
+### ❌ "A signing error occurred, possibly due to a duplicated order. Please try again."
 
 There was an issue with the order signature. This can happen if:
 
@@ -90,7 +90,7 @@ There was an issue with the order signature. This can happen if:
 
 Try submitting your order again.
 
-### "Failed to submit trade."
+### ❌ "Failed to submit trade."
 
 There was an issue when submitting your trade. This can happen if:
 
@@ -101,7 +101,7 @@ Try submitting your order again.
 
 ## 📏 Size and Balance Limits
 
-### "You can only buy \[amount]"
+### ❌ "You can only buy \[amount]"
 
 Each market has a maximum size limit to ensure market stability. If you see this:
 
@@ -110,7 +110,7 @@ Each market has a maximum size limit to ensure market stability. If you see this
 
 ## 🌍 Geographic Restrictions
 
-### Trading Unavailability Notice
+### 📈 Trading Unavailability Notice
 
 Trading is not available to users who are:
 

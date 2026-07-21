@@ -1,5 +1,5 @@
 ---
-title: Market
+title: "🏪 Market"
 description: >-
   Access read-only market data—events, order books, token prices, and
   categories—to discover markets and display live pricing.
@@ -16,7 +16,7 @@ Market Service provides read-only access to market data with event details, list
 
 ## 🧩 Types
 
-### Event
+### 📅 Event
 
 Represents a prediction event that may contain one or more markets.
 
@@ -50,7 +50,7 @@ interface Event {
 | `volume`  | string    | Total Trading Volume ($)    |
 | `markets` | Market\[] | Array of associated markets |
 
-### Market
+### 📊 Market
 
 Represents a specific tradeable question within an event.
 
@@ -88,7 +88,7 @@ interface Market {
 | `outcomes`  | MarketOutcome\[]  | Available outcomes to bet on                     |
 | `positions` | MarketPosition\[] | Positions associated with this market            |
 
-### Imports
+### 📦 Imports
 
 These types can be imported from the Forkast SDK:
 

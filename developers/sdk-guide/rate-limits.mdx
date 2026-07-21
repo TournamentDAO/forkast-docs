@@ -1,5 +1,5 @@
 ---
-title: Rate Limits
+title: "⏱️ Rate Limits"
 description: >-
   Learn Forkast's API rate limits, including global and endpoint-specific caps,
   HTTP 429 errors, and best practices for handling requests.
@@ -7,7 +7,7 @@ description: >-
 
 To ensure platform stability and fair usage, the Forkast enforces the following rate limits.
 
-### Global Rate Limits
+### 🌍 Global Rate Limits
 
 All API functions are subject to a global rate limit of:
 
@@ -15,7 +15,7 @@ All API functions are subject to a global rate limit of:
 
 If this limit is exceeded, additional requests may be throttled or rejected until the rate window resets.
 
-### Function-Specific Rate Limits
+### 🎛️ Function-Specific Rate Limits
 
 The following endpoints have additional per-second limits:
 
@@ -26,7 +26,7 @@ The following endpoints have additional per-second limits:
 
 These limits apply independently of the global per-minute limit.
 
-### Rate Limit Errors
+### ⚠️ Rate Limit Errors
 
 If a rate limit is exceeded, the API will return an **HTTP 429 (Too Many Requests)** response.
 

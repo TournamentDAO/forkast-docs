@@ -1,5 +1,5 @@
 ---
-title: Market Updates
+title: "📡 Market Updates"
 description: >-
   Learn how to receive real-time Socket.IO updates for market orderbooks,
   trades, open orders, and volume with this WebSocket API guide.
@@ -61,7 +61,7 @@ socket.on("update_volume", (data) => {
 });
 ```
 
-### Get Orderbook Updates
+### 🧾 Get Orderbook Updates
 
 Emitted to update the current order book for a specific market and outcome, showing the latest asks and bids.
 
@@ -79,7 +79,7 @@ Event: `orderbook_{marketId}_{outcomeId}`
 | price | string | Price of the order       |
 | size  | string | Size/amount of the order |
 
-### Get Event Status Changes
+### 📅 Get Event Status Changes
 
 Emitted whenever a market event undergoes a status change, providing the updated status and relevant event details.
 
@@ -89,7 +89,7 @@ Emitted whenever a market event undergoes a status change, providing the updated
 | status     | string | Status of the event (e.g., RESOLVED) |
 | eventTitle | string | Title of the event                   |
 
-### Get Trades in particular Market
+### 📊 Get Trades in particular Market
 
 Emitted when a trade occurs in the market.
 
@@ -118,7 +118,7 @@ Event for particular market: `market_trade_{marketId}`
 | slug           | string      | Slug identifier          |
 | rewardToken    | null/string | Reward token (if any)    |
 
-### Get Price Updates with Timestamp
+### ⏰ Get Price Updates with Timestamp
 
 Delivers continuous price tick updates for selected markets, with each event containing the current price and precise timestamp of execution. This feed can be used for real-time analytics, charting, algorithmic trading strategies, and monitoring intraday price movements.
 
@@ -129,7 +129,7 @@ Event: `update_price_chart_{marketId}`
 | price  | number | Latest price             |
 | minute | number | Minute timestamp (epoch) |
 
-### Get the Best Prices to Place orders
+### 🧾 Get the Best Prices to Place orders
 
 Emitted to provide the latest prices for placing orders in a market.
 
@@ -141,7 +141,7 @@ Event: `market_price_for_place_order`
 | side      | number | Side (0 = buy, 1 = sell)   |
 | price     | number | Price for the side/outcome |
 
-### Get the Latest Volume Changes 
+### 📊 Get the Latest Volume Changes
 
 Emitted to update the trading volume for a market.
 

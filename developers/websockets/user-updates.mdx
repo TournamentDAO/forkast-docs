@@ -1,5 +1,5 @@
 ---
-title: User Updates
+title: "🔔 User Updates"
 description: >-
   Connect to the socket server as an authenticated user to receive real-time
   updates on your positions, activities, and TC balance.
@@ -47,7 +47,7 @@ socket.on("update_cgpc_balance", (data) => {
 });
 ```
 
-### Get TC Balance Updates
+### 💰 Get TC Balance Updates
 
 Sent when your TC/USDC token balance or related wallet information changes.
 
@@ -71,7 +71,7 @@ Event: `update_cgpc_balance`
 | tradeGap            | string         | Trade gap value                 |
 | lastRewardClaimedAt | string         | Last reward claim ISO timestamp |
 
-### Get New Positions
+### 📈 Get New Positions
 
 Sent when your position in a market is updated.
 
@@ -95,7 +95,7 @@ Event: `update_position`
 | pnl            | number | Profit and loss (decimal)            |
 | winValue       | number | Value if your outcome wins           |
 
-### Get Activity of the user
+### 📜 Get Activity of the user
 
 Sent when a new activity (trade) is recorded for your account.
 
@@ -122,7 +122,7 @@ Event: `update_activity`
 | slug           | string         | Slug for the event/market       |
 | rewardToken    | string \| null | Reward token (if any)           |
 
-### Get Outcome Balance
+### 💼 Get Outcome Balance
 
 Sent when your balance or locked balance for a specific outcome token is updated. This event notifies you of changes to your holdings for a particular outcome in a market.
 
@@ -140,7 +140,7 @@ Event: `update_outcome_balance`
 | balance       | number       | Current balance for this outcome |
 | lockedBalance | string       | Locked balance for this outcome  |
 
-### Get Open Orders
+### 🧾 Get Open Orders
 
 Emitted to provide the list of open orders for a user in a specific market.
 

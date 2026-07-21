@@ -1,5 +1,5 @@
 ---
-title: Smart Contracts
+title: "📜 Smart Contracts"
 description: >-
   Explore Forkast's core smart contracts, including Conditional Tokens, CTF
   Exchange, and Gnosis Safe Proxy, powering its prediction market ecosystem.
@@ -15,34 +15,34 @@ Forkast utilizes a range of specialized smart contracts tailored to the needs of
 
 The following list of contracts are deployed for supporting the operation of Forkast Prediction Market. 
 
-### Gnosis Conditional Tokens
+### 🪙 Gnosis Conditional Tokens
 
 - **Purpose**: Manages conditional tokens in the prediction market.
 - **Functionality**: Enables the creation of tokens representing future events. These tokens can be transferred between users and redeemed once event outcomes are determined.
 
-### CTF Exchange
+### 🏛️ CTF Exchange
 
 - **Purpose**: Facilitates the exchange of conditional tokens through an Order Book model.
 - **Functionality**: Orders for conditional tokens are created and matched offchain using a standard order book mechanism. Once matched, orders are submitted to the onchain contract for validation and execution.
 
-### Gnosis Safe Proxy
+### 🔐 Gnosis Safe Proxy
 
 - **Purpose**: Represents the user's wallet within the prediction market platform.
 - **Functionality**: Allows for gas-free, multi-call transactions. Users sign a message off-chain for transactions, which a relayer then submits to the Gnosis Safe Proxy contract. The contract validates and executes the transaction.
 - **Note**: This is a minimal proxy contract; all calls are executed via delegate calls to its implementation.
 
-### Gnosis Safe Proxy Factory
+### 🏭 Gnosis Safe Proxy Factory
 
 - **Purpose**: Deploys Gnosis Safe Proxy contracts.
 - **Functionality**: Uses OpenZeppelin CREATE2, enabling the deployment and retrieval of wallet contract addresses deterministically.
 
-### Platform Credits Token
+### 🪙 Platform Credits Token
 
 - **Purpose**: Manages the Platform Credit token, now called Trading Credit (TC) used on the Forkast platform.
 - **Functionality**: Allows users to convert Trading Credit to supported stablecoins. Once the minimum conditions are met, users can convert credits to stablecoins in their connected wallet.
 - **Restriction**: Only allows token transfers among whitelisted contracts within the system and from user EOA accounts to their UserWalletProxy.
 
-### MultiSend Contract
+### 📮 MultiSend Contract
 
 - **Purpose:** A utility contract designed to streamline transaction batching for development companies managing complex operations in dApps or systems.
 - **Functionality:** Enables the bundling of multiple transactions into one, ensuring that all transactions succeed or none are executed. Transactions are encoded as packed bytes and processed through `call` or `delegatecall`. Particularly useful for optimizing gas costs and reducing on-chain operations in development pipelines.

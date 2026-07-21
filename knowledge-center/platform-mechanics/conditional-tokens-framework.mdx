@@ -1,5 +1,5 @@
 ---
-title: Conditional Tokens Framework
+title: "🧩 Conditional Tokens Framework"
 description: >-
   Learn how Forkast's Conditional Tokens Framework tokenizes prediction market
   outcomes using ERC1155 tokens for splitting, merging, and redeeming positions.
@@ -29,7 +29,7 @@ The smart contract provides the functionality to prepare, split, merge, and rede
 
 ## ⚙️ How It Works: High-Level Operations
 
-### 1. Preparing a Condition
+### 🧩 1. Preparing a Condition
 
 A condition defines a market event with a specific number of outcomes. The contract initializes a condition by creating a unique `conditionId` derived from:
 
@@ -46,7 +46,7 @@ This process sets up the payout structure for the condition. A condition can hav
 
 ***
 
-### 2. Splitting Positions
+### ✂️ 2. Splitting Positions
 
 Collateral can be split into binary tokens representing the possible outcomes of a market. For example:
 
@@ -65,7 +65,7 @@ The splitting process involves:
 
 ***
 
-### 3. Merging Positions
+### 📈 3. Merging Positions
 
 Binary tokens can be merged back into their original collateral. For instance:
 
@@ -80,7 +80,7 @@ This process ensures that users can retrieve collateral if they no longer wish t
 
 ***
 
-### 4. Redeeming Payouts
+### 🏦 4. Redeeming Payouts
 
 After a market resolves, users can redeem winning tokens for collateral. The oracle reports the outcome, and the contract calculates payouts based on the payout vector.
 

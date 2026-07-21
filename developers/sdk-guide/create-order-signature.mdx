@@ -1,5 +1,5 @@
 ---
-title: Create Order Signature
+title: "✍️ Create Order Signature"
 description: >-
   Learn how to create and sign Forkast orders using EIP-712 typed data,
   including domain setup, order structure, and amount calculations.
@@ -56,7 +56,7 @@ Orders on Forkast use **EIP-712 typed data signing**. The signature proves the o
 | side          | uint8   | 0 = Buy, 1= Sell.                                                                                                                        |
 | signatureType | uint8   | 3 (EIP-712 with Gnosis Safe proxy — signer is EOA, maker is proxy).                                                                      |
 
-### Calculating makerAmount and takerAmount
+### 🧮 Calculating makerAmount and takerAmount
 
 Amounts are scaled by 1e6(USDC has 6 decimals):
 

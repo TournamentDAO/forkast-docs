@@ -1,11 +1,11 @@
 ---
-title: Liquidity Calculation Equations
+title: "🧮 Liquidity Calculation Equations"
 description: >-
   Learn the equations behind Forkast's Liquidity Rewards Program, including
   scoring functions and formulas for calculating provider reward shares.
 ---
 
-### Liquidity Rewards Program
+### 💧 Liquidity Rewards Program
 
 Liquidity providers on Forkast earn rewards by posting resting limit orders, automatically qualifying them for the incentive program. The primary goal of this program is to foster a vibrant and liquid marketplace by encouraging:
 
@@ -19,13 +19,13 @@ Inspired by the dYdX liquidity reward system, Forkast adapts this methodology fo
 
 ***
 
-### Methodology
+### 🔬 Methodology
 
 Liquidity providers earn rewards based on their contributions to market liquidity, assessed using metrics like two-sided depth, participation in complementary markets, and proximity to the adjusted market midpoint. Rewards are determined by a participant's share of **Qepoch** in each market, scaled by the total rewards for that market.
 
 ***
 
-### Variables and Key Definitions
+### 📖 Variables and Key Definitions
 
 | **Variable** | **Description** |
 | ------------ | ---------------------------------------------------- |
@@ -45,7 +45,7 @@ Liquidity providers earn rewards based on their contributions to market liquidit
 
 ***
 
-### Equations
+### 🧮 Equations
 
 **Quadratic Scoring Function**
 Calculates the score for an order based on its position relative to the adjusted midpoint and the maximum spread:
@@ -106,7 +106,7 @@ Q_{final} = \frac{Q_{epoch}}{\sum_{n=1}^N Q_{epoch_n}}
 
 ***
 
-### Scoring Examples
+### 💡 Scoring Examples
 
 - **Market Configuration**: Adjusted midpoint = 0.50; max spread = 3 cents.
 - **Trader’s Orders for Qone**:
@@ -129,6 +129,6 @@ Q_{two} = \left(\frac{3-1.5}{3}\right)^2 \cdot 100 + \left(\frac{3-2}{3}\right)^
 
 ***
 
-### Conclusion
+### 🏁 Conclusion
 
 The liquidity rewards program rewards participants based on their contributions to market stability and depth, incentivizing balanced, two-sided liquidity near the market midpoint. This approach ensures a fair and vibrant marketplace, aligning with Forkast’s goals for active and sustainable trading.

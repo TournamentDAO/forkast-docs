@@ -1,5 +1,5 @@
 ---
-title: Websockets
+title: "🔌 Websockets"
 description: >-
   Learn to connect via Socket.IO WebSockets, join rooms, and subscribe to static
   and dynamic topics for real-time market and user updates.
@@ -54,11 +54,11 @@ socket.on("orderbook_1676_0", (data) => {
 
 You can subscribe to specific `rooms` to receive scoped updates.
 
-### Auto‑joined
+### 🔄 Auto‑joined
 
 - `user_{id}`(if authenticated)
 
-### Join manually
+### 🖐️ Join manually
 
 Use `joinRoom` to subscribe to any of the following:
 
@@ -72,7 +72,7 @@ socket.emit("joinRoom", "event_123");
 
 ## 📡 Topics
 
-### Static Topics
+### 📌 Static Topics
 
 Static topics are fixed, named events that never change. You listen to the exact event name and receive all messages the server emits to your connection or room.
 
@@ -86,7 +86,7 @@ Static topics are fixed, named events that never change. You listen to the exact
 | `update_position`        | User position update.               | Yes           |
 | `update_activity`        | User activity update.               | Yes           |
 
-### Dynamic Topics
+### ⚡ Dynamic Topics
 
 Dynamic topics are constructed at runtime by appending identifiers to the event name. You must compute the full topic string for the specific market/outcome you care about and listen to that exact string.
 
