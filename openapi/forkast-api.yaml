@@ -748,8 +748,76 @@ paths:
                       markets:
                         type: array
                         items:
-                          type: integer
-                          example: 0
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 0
+                            title:
+                              type: string
+                            question:
+                              type: string
+                            questionId:
+                              type: string
+                            startDate:
+                              type: string
+                            endDate:
+                              type: string
+                            image:
+                              type: string
+                            rules:
+                              type: string
+                            volume:
+                              type: string
+                            status:
+                              type: string
+                            resolvedAddress:
+                              type: string
+                              description: '(format: string,null)'
+                            resolvedOutcome:
+                              type: string
+                              description: '(format: string,null)'
+                            resolvedOutcomeId:
+                              type: string
+                              description: '(format: string,null)'
+                            resolvedOn:
+                              type: string
+                              description: '(format: string,null)'
+                            openOrderNumber:
+                              type: integer
+                              example: 0
+                            positions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  outcomeTitle:
+                                    type: string
+                                  outcomeType:
+                                    type: integer
+                                  amount:
+                                    type: number
+                                  avgPrice:
+                                    type: number
+                            conditionId:
+                              type: string
+                            outcomes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 0
+                                  title:
+                                    type: string
+                                  price:
+                                    type: string
+                                    description: '(format: number,null)'
+                                  tokenId:
+                                    type: string
+                                  outcomeType:
+                                    type: integer
         '404':
           description: Event not found
           content:
@@ -843,11 +911,21 @@ paths:
                   asks:
                     type: array
                     items:
-                      type: string
+                      type: object
+                      properties:
+                        price:
+                          type: string
+                        size:
+                          type: string
                   bids:
                     type: array
                     items:
-                      type: string
+                      type: object
+                      properties:
+                        price:
+                          type: string
+                        size:
+                          type: string
         '400':
           description: Bad request – invalid input or business rule violation
           content:
@@ -940,8 +1018,16 @@ paths:
                   data:
                     type: array
                     items:
-                      type: integer
-                      example: 0
+                      type: object
+                      properties:
+                        outcomeId:
+                          type: integer
+                          example: 0
+                        price:
+                          type: number
+                        side:
+                          type: string
+                          description: '(format: string<Buy | Sell>)'
         '429':
           description: Too many requests – rate limit exceeded
           content:
@@ -1018,8 +1104,114 @@ paths:
                   data:
                     type: array
                     items:
-                      type: integer
-                      example: 0
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 0
+                        createdAt:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        startDate:
+                          type: string
+                        endDate:
+                          type: string
+                        image:
+                          type: string
+                        resolutionSource:
+                          type: string
+                        volume:
+                          type: string
+                        resolvedOn:
+                          type: string
+                          description: '(format: string,null)'
+                        categoryIds:
+                          type: array
+                          items: {}
+                        fixtureId:
+                          type: string
+                          description: '(format: string,null)'
+                        isFavorite:
+                          type: integer
+                          example: 0
+                        markets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 0
+                              title:
+                                type: string
+                              question:
+                                type: string
+                              questionId:
+                                type: string
+                              startDate:
+                                type: string
+                              endDate:
+                                type: string
+                              image:
+                                type: string
+                              rules:
+                                type: string
+                              volume:
+                                type: string
+                              status:
+                                type: string
+                              resolvedAddress:
+                                type: string
+                                description: '(format: string,null)'
+                              resolvedOutcome:
+                                type: string
+                                description: '(format: string,null)'
+                              resolvedOutcomeId:
+                                type: string
+                                description: '(format: string,null)'
+                              resolvedOn:
+                                type: string
+                                description: '(format: string,null)'
+                              openOrderNumber:
+                                type: integer
+                                example: 0
+                              positions:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    outcomeTitle:
+                                      type: string
+                                    outcomeType:
+                                      type: integer
+                                    amount:
+                                      type: number
+                                    avgPrice:
+                                      type: number
+                              conditionId:
+                                type: string
+                              outcomes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 0
+                                    title:
+                                      type: string
+                                    price:
+                                      type: string
+                                      description: '(format: number,null)'
+                                    tokenId:
+                                      type: string
+                                    outcomeType:
+                                      type: integer
         '429':
           description: Too many requests – rate limit exceeded
           content:
@@ -2157,7 +2349,19 @@ paths:
                   failed:
                     type: array
                     items:
-                      type: string
+                      type: object
+                      properties:
+                        outcomeId:
+                          type: string
+                        kind:
+                          type: string
+                          description: '(format: string<outcome | market>)'
+                        id:
+                          type: string
+                        marketId:
+                          type: string
+                        error:
+                          type: string
         '401':
           description: Unauthorized – missing, invalid, or expired token
           content:
@@ -2270,7 +2474,19 @@ paths:
                   failed:
                     type: array
                     items:
-                      type: string
+                      type: object
+                      properties:
+                        outcomeId:
+                          type: string
+                        kind:
+                          type: string
+                          description: '(format: string<outcome | market>)'
+                        id:
+                          type: string
+                        marketId:
+                          type: string
+                        error:
+                          type: string
         '401':
           description: Unauthorized – missing, invalid, or expired token
           content:
@@ -2561,8 +2777,68 @@ paths:
                       data:
                         type: array
                         items:
-                          type: integer
-                          example: 0
+                          type: object
+                          properties:
+                            orders_id:
+                              type: integer
+                              example: 0
+                            orders_address:
+                              type: string
+                            orders_type:
+                              type: integer
+                              example: 0
+                            orders_side:
+                              type: integer
+                              example: 0
+                            orders_outcome_type:
+                              type: integer
+                              example: 0
+                            orders_status:
+                              type: integer
+                              example: 0
+                            orders_price:
+                              type: string
+                            orders_average_price:
+                              type: string
+                            orders_amount:
+                              type: string
+                            orders_filled_amount:
+                              type: string
+                            orders_remaining_amount:
+                              type: string
+                            orders_total:
+                              type: string
+                            orders_created_at:
+                              type: string
+                            orders_expired_at:
+                              type: string
+                              description: '(format: string,null)'
+                            outcome_id:
+                              type: string
+                            outcome_outcome_type:
+                              type: integer
+                              example: 0
+                            outcome_title:
+                              type: string
+                            outcome_result:
+                              type: string
+                            user_id:
+                              type: string
+                            user_name:
+                              type: string
+                            user_avatar:
+                              type: string
+                            market_id:
+                              type: string
+                            market_event_id:
+                              type: integer
+                              example: 0
+                            market_title:
+                              type: string
+                            market_question:
+                              type: string
+                            market_image:
+                              type: string
                   error:
                     type: string
         '401':
@@ -2665,7 +2941,76 @@ paths:
                 orders:
                   type: array
                   items:
-                    type: string
+                    type: object
+                    properties:
+                      tokenId:
+                        type: string
+                      side:
+                        type: integer
+                        example: 0
+                      price:
+                        type: string
+                      amount:
+                        type: string
+                      type:
+                        type: integer
+                        example: 0
+                      expiredAt:
+                        type: integer
+                        example: 0
+                      order:
+                        type: object
+                        properties:
+                          salt:
+                            type: string
+                          maker:
+                            type: string
+                          signer:
+                            type: string
+                          taker:
+                            type: string
+                          tokenId:
+                            type: string
+                          makerAmount:
+                            type: string
+                          takerAmount:
+                            type: string
+                          expiration:
+                            type: string
+                          nonce:
+                            type: string
+                          feeRateBps:
+                            type: string
+                          side:
+                            type: integer
+                            example: 0
+                          signatureType:
+                            type: integer
+                            example: 0
+                          signature:
+                            type: string
+                        required:
+                        - salt
+                        - maker
+                        - signer
+                        - taker
+                        - tokenId
+                        - makerAmount
+                        - takerAmount
+                        - expiration
+                        - nonce
+                        - feeRateBps
+                        - side
+                        - signatureType
+                        - signature
+                    required:
+                    - tokenId
+                    - side
+                    - price
+                    - amount
+                    - type
+                    - expiredAt
+                    - order
               required:
               - orders
       security:
@@ -2683,8 +3028,159 @@ paths:
                   results:
                     type: array
                     items:
-                      type: integer
-                      example: 0
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          example: 0
+                        order:
+                          type: object
+                          properties:
+                            tokenId:
+                              type: string
+                            side:
+                              type: integer
+                              example: 0
+                            price:
+                              type: string
+                            amount:
+                              type: string
+                            type:
+                              type: integer
+                              example: 0
+                            expiredAt:
+                              type: integer
+                              example: 0
+                            order:
+                              type: object
+                              properties:
+                                salt:
+                                  type: string
+                                maker:
+                                  type: string
+                                signer:
+                                  type: string
+                                taker:
+                                  type: string
+                                tokenId:
+                                  type: string
+                                makerAmount:
+                                  type: string
+                                takerAmount:
+                                  type: string
+                                expiration:
+                                  type: string
+                                nonce:
+                                  type: string
+                                feeRateBps:
+                                  type: string
+                                side:
+                                  type: integer
+                                  example: 0
+                                signatureType:
+                                  type: integer
+                                  example: 0
+                                signature:
+                                  type: string
+                              required:
+                              - salt
+                              - maker
+                              - signer
+                              - taker
+                              - tokenId
+                              - makerAmount
+                              - takerAmount
+                              - expiration
+                              - nonce
+                              - feeRateBps
+                              - side
+                              - signatureType
+                              - signature
+                          required:
+                          - tokenId
+                          - side
+                          - price
+                          - amount
+                          - type
+                          - expiredAt
+                          - order
+                        response:
+                          type: object
+                          properties:
+                            success:
+                              type: boolean
+                            orderResult:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      orders_id:
+                                        type: integer
+                                        example: 0
+                                      orders_address:
+                                        type: string
+                                      orders_type:
+                                        type: integer
+                                        example: 0
+                                      orders_side:
+                                        type: integer
+                                        example: 0
+                                      orders_outcome_type:
+                                        type: integer
+                                        example: 0
+                                      orders_status:
+                                        type: integer
+                                        example: 0
+                                      orders_price:
+                                        type: string
+                                      orders_average_price:
+                                        type: string
+                                      orders_amount:
+                                        type: string
+                                      orders_filled_amount:
+                                        type: string
+                                      orders_remaining_amount:
+                                        type: string
+                                      orders_total:
+                                        type: string
+                                      orders_created_at:
+                                        type: string
+                                      orders_expired_at:
+                                        type: string
+                                        description: '(format: string,null)'
+                                      outcome_id:
+                                        type: string
+                                      outcome_outcome_type:
+                                        type: integer
+                                        example: 0
+                                      outcome_title:
+                                        type: string
+                                      outcome_result:
+                                        type: string
+                                      user_id:
+                                        type: string
+                                      user_name:
+                                        type: string
+                                      user_avatar:
+                                        type: string
+                                      market_id:
+                                        type: string
+                                      market_event_id:
+                                        type: integer
+                                        example: 0
+                                      market_title:
+                                        type: string
+                                      market_question:
+                                        type: string
+                                      market_image:
+                                        type: string
+                            error:
+                              type: string
+                        error:
+                          type: string
                   error:
                     type: string
         '400':
@@ -2906,8 +3402,68 @@ paths:
                       data:
                         type: array
                         items:
-                          type: integer
-                          example: 0
+                          type: object
+                          properties:
+                            orders_id:
+                              type: integer
+                              example: 0
+                            orders_address:
+                              type: string
+                            orders_type:
+                              type: integer
+                              example: 0
+                            orders_side:
+                              type: integer
+                              example: 0
+                            orders_outcome_type:
+                              type: integer
+                              example: 0
+                            orders_status:
+                              type: integer
+                              example: 0
+                            orders_price:
+                              type: string
+                            orders_average_price:
+                              type: string
+                            orders_amount:
+                              type: string
+                            orders_filled_amount:
+                              type: string
+                            orders_remaining_amount:
+                              type: string
+                            orders_total:
+                              type: string
+                            orders_created_at:
+                              type: string
+                            orders_expired_at:
+                              type: string
+                              description: '(format: string,null)'
+                            outcome_id:
+                              type: string
+                            outcome_outcome_type:
+                              type: integer
+                              example: 0
+                            outcome_title:
+                              type: string
+                            outcome_result:
+                              type: string
+                            user_id:
+                              type: string
+                            user_name:
+                              type: string
+                            user_avatar:
+                              type: string
+                            market_id:
+                              type: string
+                            market_event_id:
+                              type: integer
+                              example: 0
+                            market_title:
+                              type: string
+                            market_question:
+                              type: string
+                            market_image:
+                              type: string
                   error:
                     type: string
         '400':
@@ -3104,7 +3660,33 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    deletedAt:
+                      type: string
+                      description: '(format: string,null)'
+                    name:
+                      type: string
+                    isActive:
+                      type: boolean
+                    priority:
+                      type: integer
+                      example: 0
+                    parentId:
+                      type: string
+                      description: '(format: string,null)'
+                    imageUrl:
+                      type: string
+                    children:
+                      type: array
+                      items:
+                        type: string
         '429':
           description: Too many requests – rate limit exceeded
           content:
