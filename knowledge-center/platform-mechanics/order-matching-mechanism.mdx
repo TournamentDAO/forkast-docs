@@ -11,8 +11,8 @@ Forkast employs a robust order matching system that prioritizes efficiency and f
 
 1. **Normal Matching** (Priority 1)
    Matches buy orders (bids) with sell orders (asks) based on the following rules:
- - **Price Priority**: Buy orders with higher bid prices are matched first with sell orders having lower ask prices.
- - **Refunds**: If a buy order's bid price exceeds the matched sell order's ask price, the buyer is refunded the price difference.
+- **Price Priority**: Buy orders with higher bid prices are matched first with sell orders having lower ask prices.
+- **Refunds**: If a buy order's bid price exceeds the matched sell order's ask price, the buyer is refunded the price difference.
  **Example**:
    - Sellers:
      - Seller A: 0.6 Yes (30 shares)
@@ -40,8 +40,8 @@ Forkast employs a robust order matching system that prioritizes efficiency and f
 1. **First-Come, First-Served**
    If multiple orders have the same price, the matching engine prioritizes them based on the time they were submitted.
 2. **Redundant Matching**
- - **Market Orders**: Remaining unmatched amounts are canceled and refunded immediately.
- - **Limit Orders**: Remaining unmatched amounts stay on the order book and continue in the order queue until expiration or market closure.
+- **Market Orders**: Remaining unmatched amounts are canceled and refunded immediately.
+- **Limit Orders**: Remaining unmatched amounts stay on the order book and continue in the order queue until expiration or market closure.
 
 **What happens to unfulfilled buy orders when a market resolves?**
 If a market resolves before your buy order is fulfilled, the order is automatically canceled, and your funds are fully refunded.

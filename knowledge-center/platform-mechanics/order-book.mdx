@@ -44,16 +44,12 @@ Forkast supports two types of orders:
 ### ⚡ 1. Market Orders
 
 - **Definition**: Execute trades immediately by matching with the best available prices in the order book.
-- **Example**:
- - A trader places a market order to buy 60 shares of **Ronin** **Yes**.
-  - The system matches the order with the first corresponding ask: 60 shares at $0.60.
+- **Example**: A trader places a market order to buy 60 shares of **Ronin Yes**. The system matches the order with the first corresponding ask — 60 shares at $0.60.
 
 ### 🎯 2. Limit Orders
 
 - **Definition**: Specify a maximum price for buying or a minimum price for selling, which may not execute immediately if no match is found.
-- **Example**:
- - A trader places a limit order to buy 75 shares of **Ronin** **Yes** at $0.50.
-  - The order remains on the order book until a seller matches the price.
+- **Example**: A trader places a limit order to buy 75 shares of **Ronin Yes** at $0.50. The order remains on the order book until a seller matches the price.
 
 ## 🤝 Order Matching
 
@@ -65,8 +61,8 @@ Orders are matched based on the following rules:
 3. **Refunds for Price Differences**: If a buy order price exceeds the matched sell order price, the buyer is refunded the difference.
    - Example: Buyer bids $0.70, seller asks $0.65 → Buyer pays $0.65, and the $0.05 difference is refunded.
 4. **Order Completion**:
- - **Market Orders**: Any unmatched amount is canceled and refunded.
- - **Limit Orders**: Remaining unmatched amounts stay on the order book until fulfilled or canceled.
+- **Market Orders**: Any unmatched amount is canceled and refunded.
+- **Limit Orders**: Remaining unmatched amounts stay on the order book until fulfilled or canceled.
 
 ## 🗂️ Managing and Canceling Orders
 
