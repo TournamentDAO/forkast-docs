@@ -1,0 +1,98 @@
+---
+title: "Market"
+---
+
+Market Service provides read-only access to market data with event details, lists of events, order books, token prices, and categories. You can use it to discover markets, display live pricing and liquidity.
+
+## Functions
+
+- [Get All Events](/developers/sdk-guide/market/get-all-events) 
+- [Get Event Data](/developers/sdk-guide/market/get-event-data) 
+- [Get Orderbook](/developers/sdk-guide/market/get-orderbook) 
+- [Get Token Prices](/developers/sdk-guide/market/get-token-prices) 
+
+## Types
+
+### Event
+
+Represents a prediction event that may contain one or more markets.
+
+```typescript
+interface Event {
+  id: number;
+  createdAt: Date;
+  title: string;
+  description: string;
+  status: MarketStatus;
+  startDate: Date;
+  endDate: Date;
+  image: string;
+  resolutionSource: string;
+  volume: string;
+  resolvedOn: Date | null;
+  categoryIds: number[];
+  fixtureId: string | null;
+  isFavorite: number;
+  markets: Market[];
+}
+```
+
+**Key Fields**
+
+| **Field** | **Type**  | **Description**             |
+| --------- | --------- | --------------------------- |
+| `id`      | number    | Unique ID of the event      |
+| `title`   | string    | Title of the event          |
+| `status`  | string    | Current event status        |
+| `volume`  | string    | Total Trading Volume ($)    |
+| `markets` | Market\[] | Array of associated markets |
+
+### Market
+
+Represents a specific tradeable question within an event.
+
+```typescript
+interface Market {
+  id: number;
+  title: string;
+  question: string;
+  questionId: string;
+  startDate: Date;
+  endDate: Date;
+  image: string;
+  rules: string;
+  volume: string;
+  status: MarketStatus;
+  resolvedAddress: string | null;
+  resolvedOutcome: string | null;
+  resolvedOutcomeId: string | null;
+  resolvedOn: string | null;
+  openOrderNumber: number;
+  positions: MarketPosition[];
+  conditionId: string;
+  outcomes: MarketOutcome[];
+}
+```
+
+**Key Fields**
+
+| **Field**   | **Type**          | **Description**                                  |
+| ----------- | ----------------- | ------------------------------------------------ |
+| `id`        | number            | Unique ID of the market                          |
+| `question`  | string            | Market's question                                |
+| `status`    | Market Status     | Enum indicating the status of the current market |
+| `volume`    | string            | Total Trading Volume ($)                         |
+| `outcomes`  | MarketOutcome\[]  | Available outcomes to bet on                     |
+| `positions` | MarketPosition\[] | Positions associated with this market            |
+
+### Imports
+
+These types can be imported from the Forkast SDK:
+
+```typescript
+import {
+  MarketOutcome,
+  MarketPosition,
+  MarketStatus,
+} from "@forkastgg/client";
+```

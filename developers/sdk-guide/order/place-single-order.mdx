@@ -1,0 +1,47 @@
+---
+title: "Place Single Order"
+---
+
+Places a single limit order (buy/sell) after validating wallet + key, signing the order, and submitting it.
+
+```typescript
+import { ForkastSDK, Network, OrderResponse } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+
+const accountService = sdk.getAccountService();
+const orderService = sdk.getOrderService();
+
+const { accessToken } = await accountService.loginWithPrivateKey(
+  "YOUR_PRIVATE_KEY"
+);
+
+const order: OrderResponse = await orderService.placeSingleOrder(
+  "TOKEN_ID",
+  0, // side: 0 = buy, 1 = sell
+  0.45, // price
+  10, // amount
+  {
+    wallet: "0xYourWallet",
+    proxy_wallet: "0xYourProxyWallet",
+    private_key: "0xYourPrivateKey",
+  },
+  accessToken
+);
+```
+
+**Parameters**
+
+| **Field**     | **Type** | **Required** | **Description**                                       |
+| ------------- | -------- | ------------ | ----------------------------------------------------- |
+| `tokenId`     | string   | Yes          | Address of the token                                  |
+| `account`     | Account  | Yes          | Wallet Address, Proxy Wallet and Private Key          |
+| `price`       | number   | Yes          | Price at which to place the order ( 0 \< price \< 1 ) |
+| `amount`      | number   | Yes          | Number of shares ( amount > 1)                        |
+| `side`        | number   | Yes          | The side of the order ( 0 = buy, 1 = sell)            |
+| `accessToken` | string   | Yes          | Access Token received from login response             |
+
+<Warning>
+  - Minimum order value is 0.5, ensure `price × amount ≥ 0.5`
+  - Make sure [Approve Trading Credits](/developers/sdk-guide/account/approve-trading-credits) step is completed before placing the order.
+</Warning>

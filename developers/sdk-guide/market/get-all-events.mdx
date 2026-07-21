@@ -1,0 +1,30 @@
+---
+title: "Get All Events"
+---
+
+Fetches a paginated list of market events, optionally filtered by status.
+
+```typescript
+import { ForkastSDK, Network, MarketStatus } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const marketService = sdk.getMarketService();
+
+// Default call (no params required)
+const eventsDefault = await marketService.getAllEvents();
+
+// Custom filters
+const eventsFiltered = await marketService.getAllEvents({
+  page: 1,
+  limit: 20,
+  status: [MarketStatus.ACTIVE],
+});
+```
+
+**Parameters**
+
+| **Field** | **Type**       | **Required** | **Description**                                 |
+| --------- | -------------- | ------------ | ----------------------------------------------- |
+| page      | string         | Yes          | Page number, must be an integer ≥ 1             |
+| limit     | IRedeemData\[] | Yes          | Max events per page , integer between 1 and 100 |
+| status    | MarketStatus   | Yes          | Market Status                                   |

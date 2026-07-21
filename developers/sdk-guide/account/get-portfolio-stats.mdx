@@ -1,0 +1,28 @@
+---
+title: "Get Portfolio Stats"
+---
+
+Returns a user’s trading performance summary (PnL, ROI, volume, trades count). You can pass an `accessToken` for the authenticated user or a `userId`to fetch stats for a specific user.
+
+```typescript
+import { ForkastSDK, Network, PortfolioStats } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+
+const stats: PortfolioStats = await accountService.getPortfolioStats({
+  accessToken: "YOUR_ACCESS_TOKEN",
+  // or userId: 123
+});
+```
+
+**Parameters**
+
+| **Field**   | **Type** | **Required** | **Description**           |
+| ----------- | -------- | ------------ | ------------------------- |
+| accessToken | string   | No           | Token from login response |
+| userId      | number   | No           | Specific user id to query |
+
+<Warning>
+  One of the above parameter is needed.
+</Warning>

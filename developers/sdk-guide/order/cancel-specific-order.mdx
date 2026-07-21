@@ -1,0 +1,26 @@
+---
+title: "Cancel Specific Order"
+---
+
+Cancels a single existing order by its order ID.
+
+```typescript
+import { ForkastSDK, Network } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+const orderService = sdk.getOrderService();
+
+const { accessToken } = await accountService.loginWithPrivateKey(
+  "YOUR_PRIVATE_KEY"
+);
+
+const result = await orderService.cancelOrder("ORDER_ID", accessToken);
+```
+
+**Parameters**
+
+| **Field**     | **Type** | **Required** | **Description**                           |
+| ------------- | -------- | ------------ | ----------------------------------------- |
+| `orderId`     | string   | Yes          | Order Id from order response              |
+| `accessToken` | string   | Yes          | Access Token received from login response |

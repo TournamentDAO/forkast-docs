@@ -1,0 +1,89 @@
+---
+title: "Leaderboard Rewards"
+---
+
+Forkast features **weekly** **leaderboard rewards** to recognize and reward the platform's most active and successful traders. These rewards foster competition and engagement, encouraging users to participate actively in prediction markets. 
+
+
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/Ka91RoeKcE4ntysgtktw3_image.png)
+
+***
+
+### Leaderboard Qualification
+
+To qualify for the leaderboard and be eligible for rewards, users must meet a **minimum total investment requirement of more than $5** during the competition period. Total investment is calculated as the **sum of all buy-side orders** placed by a user within the week. Only completed buy trades contribute to this total - sell orders are not included. This ensures that participants are actively engaging in trading rather than relying on volume from both buying and selling.
+
+The minimum investment threshold promotes fair competition and encourages meaningful participation. If a user’s total investment does not exceed $5, they will not qualify for the leaderboard, regardless of their trading frequency or sell-side activity. Additionally, if leverage is used, only the actual invested amount from buy orders (excluding leveraged amounts) is considered. 
+
+***
+
+### Formula
+
+```tex
+\text{Volume} = \text{Matched Price} \times \text{Quantity}
+```
+
+```tex
+\text{Gains} = 100 \times \left( \frac{\text{PnL}}{\text{Total Inv. at the Beginning of Period} + \text{Total Inv. During Period}} \right)
+```
+
+```tex
+\text{PnL} = \text{Realized Profit} + \text{Unrealized Profit}
+```
+
+```tex
+\text{Realized PnL} = \left( \text{amount} \times \text{sell price} - \text{trading fee} \right) - \left( \text{amount} \times \text{avg price} \right)
+```
+
+```tex
+\text{Unrealized PnL} = ( \text{remain amount} \times \text{market sell price} ) - \newline ( \text{remain amount} \times \text{avg price} )
+```
+
+```tex
+\text{Total Investment at the Beginning of the Period} = \newline \text{Remained Amount of Last Period} \times \text{Avg Price}
+```
+
+```tex
+\text{Total Investment During Period} = (\text{amount}_1 \times \text{buy price}_1) + \newline (\text{amount}_2 \times \text{buy price}_2)
+```
+
+### Explanations
+
+- **Weekly Volume:**
+  - Volume represents the total amount of buy and sell transactions by a user from the beginning to the end of a given week.
+  - At the start of the week, the volume is **0** since no trades have been executed yet.
+  - Volume increases when the user starts trading (i.e., when orders are matched).
+  - Primary sorting is based on volume. In case of a tie, gains are used as the tiebreaker.
+- **Weekly Gains:**
+  - Gains are a financial measure that shows how much profit or benefit you get back compared to the amount you put in. Gains are calculated from the beginning to the end of the week.
+  - Gains includes both **Realized Profit** and **Unrealized Profit**:
+    - **Realized Profit:** This is the profit after selling or redeeming tokens. It can be **positive** or **negative**, depending on the transaction. It represents the total amount the user receives after deducting the amount paid to buy the tokens.
+    - **Unrealized Profit:** This is the gain from holding a position. It is calculated as the **current position value minus the total amount paid to buy the tokens**.
+  - At the beginning of the week:
+    - **Realized profit = 0** (since no sell/redeem transactions have occurred yet).
+    - **Unrealized profit > 0** (if the position has increased in value).
+  - Since unrealized profit can exist without any trade being executed, **Gains can be positive even when Volume is 0**.
+  - Primary sorting is based on gains. In case of a tie, PnL is used as the tiebreaker.
+
+***
+
+### Claiming Rewards
+
+Leaderboard rewards are distributed directly to eligible users after the leaderboard period concludes. Users can view their rankings and claim their rewards via the **Quest** **Rewards** section of the platform.
+
+
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/KbNZ6xDLlp_9NABGamcoJ_image.png)
+
+***
+
+### Benefits of Leaderboard Rewards
+
+- **Incentivizes Activity**: Encourages users to participate in more markets and increase trading volumes.
+- **Promotes Healthy Competition**: Creates a dynamic and competitive environment for traders.
+- **Recognizes Performance**: Rewards users for skillful and consistent trading.
+
+***
+
+Leaderboard rewards are a core part of Forkast incentive programs, motivating users to stay engaged and excel in their trading activities.

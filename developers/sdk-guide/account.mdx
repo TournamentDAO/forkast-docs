@@ -1,0 +1,33 @@
+---
+title: "Account"
+---
+
+This section documents the core interfaces used when working with user accounts in ForkastSDK.
+
+## Functions
+
+- [Authenticate with Key](/developers/sdk-guide/account/authenticate-with-key) 
+- [Approve Trading Credits](/developers/sdk-guide/account/approve-trading-credits) 
+- [Get Positions by Market Status](/developers/sdk-guide/account/get-positions-by-market-status) 
+- [Redeem Positions By Markets](/developers/sdk-guide/account/redeem-positions-by-markets) 
+- [Get Portfolio Stats](/developers/sdk-guide/account/get-portfolio-stats) 
+
+## Types
+
+### Login Response
+
+Represents a user's access token and wallet salt.
+
+```typescript
+interface LoginResponse {
+  accessToken: string;
+  walletSalt: string;
+}
+```
+
+**Key Fields**
+
+| **Field**     | **Type** | **Description**                            |
+| ------------- | -------- | ------------------------------------------ |
+| `accessToken` | string   | The token to authenticate requests         |
+| `walletSalt`  | string   | The salt associated with the user's wallet |

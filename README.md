@@ -1,190 +1,49 @@
-# Jamdesk Starter Template
+# Forkast Documentation
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+Source for the Forkast documentation site, published with [Jamdesk](https://jamdesk.com).
 
-The official starter template for [Jamdesk](https://jamdesk.com) documentation sites. Clone this repository to create beautiful, professional documentation in minutes.
-
-**[Documentation](https://jamdesk.com/docs)** · **[Get Started](https://jamdesk.com/docs/quickstart)** · **[Dashboard](https://dashboard.jamdesk.com)**
-
-## What is Jamdesk?
-
-[Jamdesk](https://jamdesk.com) is a modern documentation platform that transforms MDX (Markdown + React components) into polished, production-ready documentation websites.
-
-**Why teams choose Jamdesk:**
-- **Write in MDX** - Markdown with React components for interactive docs
-- **Deploy instantly** - Push to GitHub, deploy globally in seconds
-- **Professional themes** - Three built-in themes (Jam, Nebula, Pulsar)
-- **AI-ready** - Auto-generates `llms.txt` for ChatGPT, Claude, Copilot
-- **Built-in search** - AI-powered search out of the box
-- **Analytics included** - Track page views and search queries
-
-## What's Included
-
-This starter template includes everything you need to get started:
+[Forkast](https://forkast.gg) is a prediction-market trading platform. This repo contains:
 
 ```
-starter-docs/
+forkast-docs/
 ├── docs.json              # Site configuration (theme, colors, navigation)
-├── introduction.mdx       # Welcome page
-├── quickstart.mdx         # Getting started guide
-├── api-reference/         # API documentation example pages
-│   ├── openapi-example.mdx          # Live-rendered OpenAPI endpoint
-│   └── request-response-examples.mdx # Hand-authored request/response demo
-├── components/            # Component examples
-│   ├── callouts.mdx       # Notes, warnings, tips
-│   ├── cards.mdx          # Card layouts
-│   ├── steps.mdx          # Step-by-step guides
-│   └── tabs-and-accordions.mdx
-├── openapi/               # OpenAPI specification files
-│   └── example-api.yaml   # Sample Acme Support API spec
-└── writing/               # Content writing guides
-    ├── code-blocks.mdx    # Syntax highlighting
-    ├── components.mdx     # Using MDX components
-    └── pages.mdx          # Page structure
+├── knowledge-center/      # User-facing guides: platform mechanics, rewards, FAQs, policies
+├── developers/            # Developer docs: SDK integration guide, websockets, MCP server
+├── api-reference/         # REST API endpoint pages (generated from the OpenAPI spec)
+└── openapi/
+    └── forkast-api.yaml   # Forkast REST API OpenAPI 3.0 specification
 ```
 
-**Theme:** This template uses the **Jam** theme - a clean, modern design with purple accent colors. [See all themes →](https://jamdesk.com/docs/customization/theming)
+## How publishing works
 
-## Quick Start
+Jamdesk is connected to this repository. **Every push to the default branch triggers a build and deploys the site automatically** — no CI/CD setup required.
 
-### Option 1: Use the Dashboard (Recommended)
+## Editing content
 
-1. Sign up at [dashboard.jamdesk.com](https://dashboard.jamdesk.com)
-2. Create a new project and select "Starter Template"
-3. Connect your GitHub repository
-4. Start editing - changes deploy automatically
+Pages are MDX (Markdown + components). The file path becomes the page URL, and sidebar structure is defined in `docs.json` under `navigation`.
 
-### Option 2: Use This Template
-
-Click the green **"Use this template"** button at the top of this page to create your own repository based on this starter.
-
-### Option 3: Clone and Deploy
+Preview locally with the Jamdesk CLI:
 
 ```bash
-# Clone this template
-git clone https://github.com/jamdesk/starter-docs.git my-docs
-cd my-docs
-
-# Preview locally (requires Jamdesk CLI)
 npm install -g jamdesk
-jamdesk dev
-
-# Open http://localhost:3000
+jamdesk dev          # http://localhost:3000
+jamdesk validate     # check for errors
+jamdesk broken-links # check for broken links
 ```
 
-Then connect your repository to Jamdesk via the [dashboard](https://dashboard.jamdesk.com).
+### API reference pages
 
-## Customization
-
-### Change Theme Colors
-
-Edit `docs.json` to customize your brand colors:
-
-```json
-{
-  "colors": {
-    "primary": "#6366F1",
-    "light": "#818CF8",
-    "dark": "#4F46E5"
-  }
-}
-```
-
-### Switch Themes
-
-Change the theme in `docs.json`:
-
-```json
-{
-  "theme": "jam"      // Options: "jam", "nebula", "pulsar"
-}
-```
-
-### Add Your Logo
-
-```json
-{
-  "logo": {
-    "light": "/images/logo-light.svg",
-    "dark": "/images/logo-dark.svg"
-  }
-}
-```
-
-## Writing Content
-
-All content is written in MDX - Markdown with React components:
+Endpoint pages under `api-reference/` are thin MDX stubs bound to the OpenAPI spec via frontmatter, e.g.:
 
 ```mdx
 ---
-title: My Page
-description: A brief description for SEO
+title: "Get user profile"
+openapi: "/openapi/forkast-api.yaml GET /user/profile"
 ---
-
-# Welcome
-
-This is regular Markdown with **bold** and *italic* text.
-
-<Note>
-  This is a callout component for important information.
-</Note>
-
-<Steps>
-  <Step title="First">Do this first</Step>
-  <Step title="Second">Then do this</Step>
-</Steps>
 ```
 
-**Available components:** Cards, Tabs, Accordions, Steps, Callouts, Code Groups, and [25+ more →](https://jamdesk.com/docs/components/overview)
+To change request/response documentation, edit `openapi/forkast-api.yaml` — the endpoint pages render from it.
 
-## Local Development
+## Content source
 
-Preview your docs locally with hot reload:
-
-```bash
-# Install the CLI (choose one)
-npm install -g jamdesk          # via npm
-brew install jamdesk/tap/jamdesk # via Homebrew
-
-# Start the dev server
-jamdesk dev
-
-# Validate your docs
-jamdesk validate
-
-# Check for broken links
-jamdesk broken-links
-```
-
-## Documentation
-
-- [Jamdesk Documentation](https://jamdesk.com/docs) - Full platform docs
-- [Quickstart Guide](https://jamdesk.com/docs/quickstart) - Get started in 5 minutes
-- [MDX Basics](https://jamdesk.com/docs/content/mdx-basics) - Writing content
-- [Components](https://jamdesk.com/docs/components/overview) - All available components
-- [Theming](https://jamdesk.com/docs/customization/theming) - Customize your site
-- [docs.json Reference](https://jamdesk.com/docs/config/docs-json-reference) - Full configuration options
-
-## Deploy
-
-Jamdesk handles deployment automatically:
-
-1. Push changes to your connected GitHub repository
-2. Jamdesk builds your site (typically under 30 seconds)
-3. Your docs are live on your custom domain or `yoursite.jamdesk.app`
-
-No build configuration required. No CI/CD setup needed.
-
-## Support
-
-- **Documentation:** [jamdesk.com/docs](https://jamdesk.com/docs)
-- **Help Center:** [jamdesk.com/docs/help](https://jamdesk.com/docs/help/faq)
-- **Issues:** [github.com/jamdesk/starter-docs/issues](https://github.com/jamdesk/starter-docs/issues)
-
-## License
-
-MIT - Use this template for any project, commercial or personal.
-
----
-
-Built with [Jamdesk](https://jamdesk.com) - Beautiful documentation that developers actually love.
+The content was migrated from the Archbee workspace export (Forkast Knowledge Center + Forkast Developer Docs spaces) on 2026-07-21.

@@ -1,0 +1,150 @@
+---
+title: "Market Updates"
+---
+
+To receive real-time updates volume, market trades and open orders.
+
+```javascript
+import { io } from "socket.io-client";
+
+const url = "{{BASE_URL}}";
+const opts = {
+  transports: ["websocket"],
+  reconnection: true,
+  auth: { token: "YOUR_TOKEN_HERE" }, // Set your login token here (optional)
+};
+
+const socket = io(url, opts);
+
+socket.on("connect", () => {
+  console.log("connected", socket.id);
+});
+
+socket.on("disconnect", (reason) => {
+  console.log("disconnected", reason);
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Connection error:", err.message);
+});
+
+// Listen for documented events
+socket.on("orderbook_102_0", (data) => {
+  console.log("Received orderbook_102_0:", data);
+});
+
+socket.on("open_order_102_87", (data) => {
+  console.log("Received open_order_102_87:", data);
+});
+
+socket.on("status_event", (data) => {
+  console.log("Received status_event:", data);
+});
+
+socket.on("market_trade", (data) => {
+  console.log("Received market_trade:", data);
+});
+
+socket.on("update_price_chart_102", (data) => {
+  console.log("Received update_price_chart_102:", data);
+});
+
+socket.on("market_price_for_place_order", (data) => {
+  console.log("Received market_price_for_place_order:", data);
+});
+
+socket.on("update_volume", (data) => {
+  console.log("Received update_volume:", data);
+});
+```
+
+### Get Orderbook Updates
+
+Emitted to update the current order book for a specific market and outcome, showing the latest asks and bids.
+
+Event: `orderbook_{marketId}_{outcomeId}`
+
+| Field | Type                   | Description                      |
+| ----- | ---------------------- | -------------------------------- |
+| asks  | Array of Order Objects | List of ask orders (sell orders) |
+| bids  | Array of Order Objects | List of bid orders (buy orders)  |
+
+**Order Object:**
+
+| Field | Type   | Description              |
+| ----- | ------ | ------------------------ |
+| price | string | Price of the order       |
+| size  | string | Size/amount of the order |
+
+### Get Event Status Changes
+
+Emitted whenever a market event undergoes a status change, providing the updated status and relevant event details.
+
+| Field      | Type   | Description                          |
+| ---------- | ------ | ------------------------------------ |
+| eventId    | string | Event ID                             |
+| status     | string | Status of the event (e.g., RESOLVED) |
+| eventTitle | string | Title of the event                   |
+
+### Get Trades in particular Market
+
+Emitted when a trade occurs in the market.
+
+Event for all trades: `market_trade` 
+
+Event for particular market: `market_trade_{marketId}`
+
+| Field          | Type        | Description              |
+| -------------- | ----------- | ------------------------ |
+| id             | string      | Trade ID                 |
+| amount         | number      | Amount traded            |
+| price          | number      | Price per unit           |
+| total          | number      | Total value of the trade |
+| type           | string      | Trade type (buy/sell)    |
+| createdAt      | string      | ISO timestamp of trade   |
+| txHash         | string      | Transaction hash         |
+| marketId       | string      | Market ID                |
+| marketTitle    | string      | Market title             |
+| marketQuestion | string      | Market question          |
+| marketImage    | string      | URL to market image      |
+| eventId        | number      | Event ID                 |
+| outcomeId      | string      | Outcome ID               |
+| outcomeTitle   | string      | Outcome title            |
+| outcomeType    | number      | Outcome type             |
+| abbreviation   | null/string | Abbreviation (if any)    |
+| slug           | string      | Slug identifier          |
+| rewardToken    | null/string | Reward token (if any)    |
+
+### Get Price Updates with Timestamp
+
+Delivers continuous price tick updates for selected markets, with each event containing the current price and precise timestamp of execution. This feed can be used for real-time analytics, charting, algorithmic trading strategies, and monitoring intraday price movements.
+
+Event: `update_price_chart_{marketId}`
+
+| Field  | Type   | Description              |
+| ------ | ------ | ------------------------ |
+| price  | number | Latest price             |
+| minute | number | Minute timestamp (epoch) |
+
+### Get the Best Prices to Place orders
+
+Emitted to provide the latest prices for placing orders in a market.
+
+Event: `market_price_for_place_order`
+
+| Field     | Type   | Description                |
+| --------- | ------ | -------------------------- |
+| outcomeId | number | Outcome ID                 |
+| side      | number | Side (0 = buy, 1 = sell)   |
+| price     | number | Price for the side/outcome |
+
+### Get the Latest Volume Changes 
+
+Emitted to update the trading volume for a market.
+
+Event: `update_volume`
+
+| Field    | Type   | Description          |
+| -------- | ------ | -------------------- |
+| marketId | number | Market ID            |
+| volume   | number | Total trading volume |

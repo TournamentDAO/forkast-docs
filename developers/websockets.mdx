@@ -1,0 +1,101 @@
+---
+title: "Websockets"
+---
+
+This is the recommended way to receive real‑time updates such as orderbook changes, market price updates, positions, orders.
+
+## Base URL
+
+> wss\://mgapi.forkast.gg
+
+<Info>
+  This server uses Socket.IO over WebSocket. If you are using a raw WebSocket client, switch to a Socket.IO client library.
+</Info>
+
+```javascript
+import { io } from "socket.io-client";
+
+const url = {{BASE_URL}};
+const opts = {
+  transports: ["websocket"],
+  reconnection: true,
+  // auth: { token: "YOUR_TOKEN_HERE" }, // Uncomment and set if needed
+};
+
+const socket = io(url, opts);
+
+socket.on("connect", () => {
+  console.log("connected", socket.id);
+  socket.emit("joinRoom", "market_1030");
+});
+
+socket.on("disconnect", (reason) => {
+  console.log("disconnected", reason);
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Connection error:", err.message);
+});
+
+// Listen for the 'orderbook_1676_0' topic
+socket.on("orderbook_1676_0", (data) => {
+  console.log("Received orderbook_1676_0:", data);
+});
+```
+
+<Warning>
+  If no token is provided, you will connect as a guest and only receive public events.
+</Warning>
+
+## Rooms
+
+You can subscribe to specific `rooms` to receive scoped updates.
+
+### Auto‑joined
+
+- `user_{id}`(if authenticated)
+
+### Join manually
+
+Use `joinRoom` to subscribe to any of the following:
+
+- `event_{eventId}`: event comments and reactions
+- `market_{marketId}`: market‑level updates (e.g., volume)
+- `outcome_{outcomeId}`: outcome‑level updates (e.g., last price)
+
+```javascript
+socket.emit("joinRoom", "event_123");
+```
+
+## Topics
+
+### Static Topics
+
+Static topics are fixed, named events that never change. You listen to the exact event name and receive all messages the server emits to your connection or room.
+
+| Topic                    | Description                         | User Specifc? |
+| ------------------------ | ----------------------------------- | ------------- |
+| `update_activity_global` | Global activity update (all users). | No            |
+| `new_event_created`      | New event created.                  | No            |
+| `status_event`           | Event status update.                | No            |
+| `update_cgpc_balance`    | User CGPC balance update.           | Yes           |
+| `update_outcome_balance` | User outcome balance update.        | Yes           |
+| `update_position`        | User position update.               | Yes           |
+| `update_activity`        | User activity update.               | Yes           |
+
+### Dynamic Topics
+
+Dynamic topics are constructed at runtime by appending identifiers to the event name. You must compute the full topic string for the specific market/outcome you care about and listen to that exact string.
+
+| Topic                                               | Description                                      |
+| --------------------------------------------------- | ------------------------------------------------ |
+| `market_trade_{marketId}`                           | Trade updates scoped to a market.                |
+| `orderbook_{marketId}_{outcomeType}`                | Orderbook updates for a market and outcome type. |
+| `open_order_{marketId}_{userId}`                    | Open order stream for a user in a market.        |
+| `update_price_chart_{marketId}`                     | Price chart updates for a market.                |
+| `market_price_{marketId}_{outcomeId}_{outcomeType}` | Price updates scoped to a market/outcome/type.   |
+
+Explore the sections below for comprehensive response details and implementation examples:
+
+1. [Market Updates](/developers/websockets/market-updates) 
+2. [User Updates](/developers/websockets/user-updates)

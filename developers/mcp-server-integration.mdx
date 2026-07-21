@@ -1,0 +1,154 @@
+---
+title: "MCP Server Integration"
+---
+
+We expose our documentation through a **Model Context Protocol (MCP) server** over **HTTP using Server-Sent Events (SSE)**.
+
+This enables AI coding tools to securely access structured documentation, including **SDK guides, platform mechanisms, and API references - **&#x73;o they can assist developers when building on our platform.
+
+## MCP Endpoint
+
+> [https://mcp.forkast.gg/mcp](https://mcp.forkast.gg/mcp) 
+
+<Info>
+  Transport: **HTTP SSE**
+</Info>
+
+## Connecting AI Tools to the MCP Server
+
+You can connect the MCP server to the following AI development tools.
+
+### GitHub Copilot
+
+GitHub Copilot supports MCP servers through compatible MCP clients.
+
+**Steps**
+
+1. Open your MCP client configuration file. 
+   Example location:
+
+> \~/.config/mcp/config.json
+
+2. Add a server entry:
+
+> \\{
+>   "mcpServers": \\{
+>     "forkast-mcp-docs": \\{
+>       "transport": \\{
+>         "type": "sse",
+>         "url": "https\:/mcp.forkast.gg/mcp"
+>       }
+>     }
+>   }
+> }
+
+3. Restart your editor or MCP client. 
+4. The tools exposed by the MCP server will now be available to Copilot.
+
+**Official Documentation**
+
+- [GitHub Copilot – About Model Context Protocol](https://docs.github.com/en/copilot/concepts/context/mcp)
+- [Extending Copilot Chat with MCP servers](https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp/extend-copilot-chat-with-mcp)
+
+### Cursor
+
+Cursor IDE supports connecting to MCP servers to allow Cursor’s AI assistant to access external tools and APIs.
+
+**Setup**
+
+1. Open **Cursor Settings** 
+2. Navigate to **MCP Servers** 
+3. Add your server configuration
+
+> \\{
+>   "mcpServers": \\{
+>     "forkast-mcp-docs": \\{
+>       "transport": "sse",
+>       "url": "https\://mcp.forkast.gg/mcp"
+>     }
+>   }
+> }
+
+1. Reload Cursor. 
+
+Once connected, Cursor will automatically detect tools provided by the MCP server.
+
+### Claude Code
+
+You can connect this MCP server to **Claude Code **&#x75;sing the CLI.
+
+**Steps**
+
+1.  Add the MCP server
+
+Run the following command in your terminal:
+
+> claude mcp add --transport http forkast-mcp-docs https\://mcp.forkast.gg/mcp
+
+This registers the MCP server in Claude Code.
+
+2.  Restart Claude Code
+
+Restart Claude Code if it is currently running.
+
+3. Manage MCP servers
+
+Inside Claude Code, run:
+
+> /mcp
+
+This opens the MCP server manager where you can:
+
+- View configured MCP servers 
+
+- Authenticate (if required) 
+
+- Enable or disable servers 
+
+3. Verify connection
+
+After authentication, Claude Code will show a confirmation such as:
+
+> Connected to MCP server: forkast-mcp-docs
+
+You can confirm the connection anytime using:
+
+> /mcp
+
+**Optional: Install globally**
+
+By default, MCP servers are added **only to the current project**.
+
+To make the server available across all projects:
+
+> claude mcp add --scope user --transport http forkast-mcp-docs https\://mcp.forkast.gg/mcp
+
+This installs the MCP server globally.
+
+## Using the MCP server
+
+### Explore the SDK
+
+> Using the Forkast documentation, show me how to install and initialize the Forkast JavaScript SDK.
+
+> Use the Forkast documentation to generate a Python example that creates a client and authenticates.
+
+### Find API Usage Examples
+
+> Using the Forkast documentation, show a curl example for calling the getting all the active markets.
+
+> Based on the Forkast documentation, generate a Node.js script to place orders on a active market.
+
+### Understand Platform Concepts
+
+> Using the Forkast documentation, explain how \<platform mechanism> works and when it should be used.
+
+### Generate Integration Code
+
+> Using the Forkast documentation, generate a complete Node.js example that authenticates and calls 
+
+## Improving the MCP server output
+
+For the best output, we recommend setting up rules to guide the agent. To get you started, we have some helpful example rules.
+
+****

@@ -1,0 +1,32 @@
+---
+title: "Get Event Data"
+---
+
+Fetches detailed information for a single event by its `eventId`. Useful when a user selects a event and you need full event metadata.
+
+```typescript
+import { ForkastSDK, Network } from "@forkastgg/client";
+import type { Event } from "@forkastgg/client/dist/types/market";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const marketService = sdk.getMarketService();
+
+const event: Event = await marketService.getEventData("EVENT_ID");
+```
+
+**Parameters**
+
+| **Field** | **Type** | **Required** | **Description**                            |
+| --------- | -------- | ------------ | ------------------------------------------ |
+| eventId   | number   | Yes          | Event Identifier, should be greater than 0 |
+
+### Get Specific Market 
+
+Each event will have one or more than one markets. You could access a specific market and the outcome id to access order book.
+
+```typescript
+// we can access specific index from the array
+const market = eventData.markets[index];
+const outcomeId = market.outcomes[index].id;
+const outcomeType = market.outcomes[index].outcomeType;
+```

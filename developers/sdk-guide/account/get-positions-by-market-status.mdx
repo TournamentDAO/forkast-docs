@@ -1,0 +1,34 @@
+---
+title: "Get Positions by Market Status"
+---
+
+Fetches a paginated list of user positions filtered by market status.
+
+```typescript
+import { ForkastSDK, Network, MarketStatus } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+
+const { accessToken } = await accountService.loginWithPrivateKey("YOUR_PRIVATE_KEY");
+
+const res = await accountService.getPositions(
+  accessToken,
+  1,                // page
+  20,               // limit
+  MarketStatus.RESOLVED
+);
+```
+
+**Parameters**
+
+| **Field**    | **Type**     | **Required** | **Description**                                                       |
+| ------------ | ------------ | ------------ | --------------------------------------------------------------------- |
+| accessToken  | string       | Yes          | Token from login response                                             |
+| page         | string       | Yes          | Page index, must be an integer ≥ 1                                    |
+| limit        | number       | Yes          | Items per page, integer between 1 and 100                             |
+| marketStatus | MarketStatus | Yes          | Use Market Status such Active, Pending or Resolved from the SDK types |
+
+<Info>
+  Results are sorted by current value, descending.
+</Info>

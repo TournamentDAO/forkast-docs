@@ -1,0 +1,39 @@
+---
+title: "Cancel All Orders by Market"
+---
+
+Cancels all open orders by outcome, market, or event. Provide one of `outcomeId`, `marketId`, or `eventId`. If `eventId`is used, it cancels for all markets in that event.
+
+```typescript
+import {
+  ForkastSDK,
+  Network,
+  CancelAllOrderParams,
+  CancelAllOrderResponse,
+} from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+const orderService = sdk.getOrderService();
+
+const { accessToken } = await accountService.loginWithPrivateKey(
+  "YOUR_PRIVATE_KEY"
+);
+
+// By marketId
+const params: CancelAllOrderParams = { marketId: 123 };
+
+const result: CancelAllOrderResponse = await orderService.cancelAllOrder(
+  params,
+  accessToken
+);
+```
+
+**Parameters**
+
+| **Field**     | **Type**             | **Required** | **Description**                                                           |
+| ------------- | -------------------- | ------------ | ------------------------------------------------------------------------- |
+| `params`      | CancelAllOrderParams | Yes          | Send one of the below in the object<br />* outcomeId
+* marketId
+* eventId |
+| `accessToken` | string               | Yes          | Access Token received from login response                                 |

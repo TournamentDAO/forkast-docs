@@ -1,0 +1,121 @@
+---
+title: "Conditional Tokens Framework"
+---
+
+## Overview
+
+Forkast utilizes a robust **Conditional Tokens Framework (CTF)** implemented in the smart contract system to tokenize the outcomes of prediction markets. This framework is based on Gnosis's Conditional Tokens architecture, enabling the creation, trading, and resolution of outcome tokens in a secure and efficient manner. At its core, CTF leverages ERC1155 standards to represent binary outcome tokens backed by collateral (e.g., USDC or PC).
+
+The smart contract provides the functionality to prepare, split, merge, and redeem tokens tied to specific market conditions. It ensures trustless and transparent handling of collateral and outcome resolutions, allowing users to interact seamlessly with prediction markets.
+
+***
+
+## Key Features
+
+1. **Outcome Tokenization**
+   Market outcomes are represented as distinct ERC1155 tokens corresponding to binary outcomes like “YES” and “NO.” These tokens are backed by collateral and are derived from specific conditions.
+2. **Dynamic Operations**
+   - **Prepare Conditions**: Create and initialize conditions tied to markets.
+   - **Split Positions**: Divide collateral into binary outcome tokens for trading.
+   - **Merge Positions**: Recombine binary tokens into collateral.
+   - **Redeem Payouts**: Exchange winning outcome tokens for collateral after a market resolves.
+3. **Efficient Token Management**
+   The framework ensures efficient management of collateral and tokens while providing flexibility for traders to adjust positions based on market conditions.
+
+***
+
+## How It Works: High-Level Operations
+
+### 1. Preparing a Condition
+
+A condition defines a market event with a specific number of outcomes. The contract initializes a condition by creating a unique `conditionId` derived from:
+
+- The oracle assigned to report the result.
+- The `questionId` representing the event.
+- The number of outcome slots (`outcomeSlotCount`).
+
+This process sets up the payout structure for the condition. A condition can have up to 256 outcomes, but Forkast markets are binary (two outcomes).
+
+**Smart Contract Reference:**
+
+- Function: `prepareCondition(address oracle, bytes32 questionId, uint256 outcomeSlotCount)`
+- Emits: `ConditionPreparation` event.
+
+***
+
+### 2. Splitting Positions
+
+Collateral can be split into binary tokens representing the possible outcomes of a market. For example:
+
+- 1 unit of collateral (e.g., 1 USDC) is split into 1 "YES" token and 1 "NO" token.
+
+The splitting process involves:
+
+- Verifying the validity of the condition and partition.
+- Burning collateral or composite tokens.
+- Minting binary tokens based on the specified partition.
+
+**Smart Contract Reference:**
+
+- Function: `splitPosition(IERC20 collateralToken, bytes32 parentCollectionId, bytes32 conditionId, uint256[] calldata partition, uint256 amount)`
+- Emits: `PositionSplit` event.
+
+***
+
+### 3. Merging Positions
+
+Binary tokens can be merged back into their original collateral. For instance:
+
+- 1 "YES" token and 1 "NO" token are merged to recover 1 unit of collateral.
+
+This process ensures that users can retrieve collateral if they no longer wish to hold tokens for unresolved conditions.
+
+**Smart Contract Reference:**
+
+- Function: `mergePositions(IERC20 collateralToken, bytes32 parentCollectionId, bytes32 conditionId, uint256[] calldata partition, uint256 amount)`
+- Emits: `PositionsMerge` event.
+
+***
+
+### 4. Redeeming Payouts
+
+After a market resolves, users can redeem winning tokens for collateral. The oracle reports the outcome, and the contract calculates payouts based on the payout vector.
+
+The redemption process involves:
+
+- Burning tokens for losing outcomes.
+- Transferring collateral for winning tokens based on the reported payouts.
+
+**Smart Contract Reference:**
+
+- Function: `redeemPositions(IERC20 collateralToken, bytes32 parentCollectionId, bytes32 conditionId, uint256[] calldata indexSets)`
+- Emits: `PayoutRedemption` event.
+
+***
+
+## Key Data Structures and Utilities
+
+1. **Condition ID (**`conditionId`**)**
+   A unique identifier for a market condition derived using:
+   - `oracle` (reporting address)
+   - `questionId` (hash of event details)
+   - `outcomeSlotCount` (number of outcomes).
+2. **Position ID (**`positionId`**)**
+   A unique identifier for binary outcome tokens derived from:
+   - `collateralToken` (backing token).
+   - `collectionId` (combines `conditionId` and outcome details).
+3. **Payout Numerators and Denominators**
+   Used to calculate rewards for winning positions. The `payoutNumerators` array defines the share of collateral allocated to each outcome. The `payoutDenominator` ensures payout consistency.
+
+**Smart Contract References:**
+
+- Functions: `getConditionId`, `getCollectionId`, `getPositionId`
+
+***
+
+## Why This Framework?
+
+1. **Flexibility**: Supports dynamic token operations (split, merge, redeem) for evolving market conditions.
+2. **Security**: Ensures transparent handling of collateral and payouts through smart contracts.
+3. **Interoperability**: Built on ERC1155 standards, enabling seamless integration with DeFi protocols.
+4. **Transparency**: Emission of events like `ConditionPreparation` and `PayoutRedemption` ensures traceability.

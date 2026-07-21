@@ -1,0 +1,29 @@
+---
+title: "Get Token Prices"
+---
+
+Fetches token price info for a market and side.
+
+```typescript
+import { ForkastSDK, Network } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+const marketService = sdk.getMarketService();
+
+// Default side = 0 (buy)
+const pricesBuy = await marketService.getTokenPrices(123);
+
+// Explicit side = 1 (sell)
+const pricesSell = await marketService.getTokenPrices(123, 1);
+```
+
+**Parameters**
+
+| **Field** | **Type** | **Required** | **Description**                                    |
+| --------- | -------- | ------------ | -------------------------------------------------- |
+| marketId  | number   | Yes          | Market identifier                                  |
+| side      | number   | No           | Trade side (0 = buy, 1 = sell). default value is 0 |
+
+<Info>
+  Token prices represent the current quoted pricing for outcome tokens in a given market, returned for the requested side (0 = buy, 1 = sell). Use this to display live pricing, build trading UIs, or compute expected costs before placing orders.
+</Info>

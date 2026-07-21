@@ -1,0 +1,61 @@
+---
+title: "Smart Contracts"
+---
+
+This section provides an overview of the core smart contracts within the Forkast prediction market architecture. Each contract plays a critical role in enabling smooth, secure, and efficient prediction market functionality.
+
+# Smart Contracts Deployed
+
+Forkast utilizes a range of specialized smart contracts tailored to the needs of its prediction market and Web3 ecosystem. Below is an overview of these contracts, their purpose, and functionality. 
+
+***
+
+The following list of contracts are deployed for supporting the operation of Forkast Prediction Market. 
+
+### Gnosis Conditional Tokens
+
+- **Purpose**: Manages conditional tokens in the prediction market.
+- **Functionality**: Enables the creation of tokens representing future events. These tokens can be transferred between users and redeemed once event outcomes are determined.
+
+### CTF Exchange
+
+- **Purpose**: Facilitates the exchange of conditional tokens through an Order Book model.
+- **Functionality**: Orders for conditional tokens are created and matched offchain using a standard order book mechanism. Once matched, orders are submitted to the onchain contract for validation and execution.
+
+### Gnosis Safe Proxy
+
+- **Purpose**: Represents the user's wallet within the prediction market platform.
+- **Functionality**: Allows for gas-free, multi-call transactions. Users sign a message off-chain for transactions, which a relayer then submits to the Gnosis Safe Proxy contract. The contract validates and executes the transaction.
+- **Note**: This is a minimal proxy contract; all calls are executed via delegate calls to its implementation.
+
+### Gnosis Safe Proxy Factory
+
+- **Purpose**: Deploys Gnosis Safe Proxy contracts.
+- **Functionality**: Uses OpenZeppelin CREATE2, enabling the deployment and retrieval of wallet contract addresses deterministically.
+
+### Platform Credits Token
+
+- **Purpose**: Manages the Platform Credit token, now called Trading Credit (TC) used on the Forkast platform.
+- **Functionality**: Allows users to convert Trading Credit to supported stablecoins. Once the minimum conditions are met, users can convert credits to stablecoins in their connected wallet.
+- **Restriction**: Only allows token transfers among whitelisted contracts within the system and from user EOA accounts to their UserWalletProxy.
+
+### MultiSend Contract
+
+- **Purpose:** A utility contract designed to streamline transaction batching for development companies managing complex operations in dApps or systems.
+- **Functionality:** Enables the bundling of multiple transactions into one, ensuring that all transactions succeed or none are executed. Transactions are encoded as packed bytes and processed through `call` or `delegatecall`. Particularly useful for optimizing gas costs and reducing on-chain operations in development pipelines.
+- **Note:** This contract should be called via delegatecall to ensure proper execution and transaction integrity.
+
+***
+
+## Deployed Contracts
+
+Below is a list of the deployed contracts, including their addresses and links to the blockchain explorer for verification.
+
+| Name                   | Address                                    | Link                                                                                  |
+| ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Platform Credits       | 0x4AC7b973fb4f10D94eda5Efa92fFABD6aDDFb65c | [View](https://arbiscan.io/address/0x4AC7b973fb4f10D94eda5Efa92fFABD6aDDFb65c)        |
+| GnosisSafe             | 0x3780D45DeD72BD3cfDD49D2e213E6a329E8e8Cfd | [View](https://app.roninchain.com/address/0xb588A9b41ba6b9645E680e3A4b725240c186BDAf) |
+| GnosisSafeProxyFactory | 0x5c8789b886ADa0fF89Defebe27AAF954984350BF | [View](https://app.roninchain.com/address/0x02f376fE3e11634A866D2087F01427B09A235599) |
+| ConditionalTokens      | 0x49598aae06f8ed6D82Cb9DFa503e731221fBf7E6 | [View](https://app.roninchain.com/address/0xf74159bc0C8ef2f9660aF1B131Bea9BBa675c710) |
+| CTFExchange            | 0x2D7aa09fe8a9Af205aD6E0Fef1441834c4250cdc | [View](https://app.roninchain.com/address/0x520fE655590e6feE13656590f1bE3eDf31fE099C) |
+| MultiSend              | 0x0D2Bea44d8E9AE2ac6b9419431dea3e48aBF00BD | [View](https://app.roninchain.com/address/0xe78e19491724e0ACdA38eCf3364a91A98fd1f33b) |

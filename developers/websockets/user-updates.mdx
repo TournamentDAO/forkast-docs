@@ -1,0 +1,161 @@
+---
+title: "User Updates"
+---
+
+To receive real-time updates about your positions, activities, and TC balance, you must connect to the socket server as an authenticated user.
+
+```javascript
+import { io } from "socket.io-client";
+
+const url = "{{BASE_URL}}";
+const opts = {
+  transports: ["websocket"],
+  reconnection: true,
+  auth: { token: "YOUR_TOKEN_HERE" }, // Set your JWT or session token here
+};
+
+const socket = io(url, opts);
+
+socket.on("connect", () => {
+  console.log("connected", socket.id);
+  // Optionally join a room if needed
+  // socket.emit("joinRoom", "user_123"); // Example: join a user-specific room
+});
+
+socket.on("disconnect", (reason) => {
+  console.log("disconnected", reason);
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Connection error:", err.message);
+});
+
+// Listen for user-specific events
+socket.on("update_position", (data) => {
+  console.log("Received update_position:", data);
+});
+
+socket.on("update_activity", (data) => {
+  console.log("Received update_activity:", data);
+});
+
+socket.on("update_cgpc_balance", (data) => {
+  console.log("Received update_cgpc_balance:", data);
+});
+```
+
+### Get TC Balance Updates
+
+Sent when your TC/USDC token balance or related wallet information changes.
+
+Event: `update_cgpc_balance`
+
+| Field               | Type           | Description                     |
+| ------------------- | -------------- | ------------------------------- |
+| id                  | string         | Balance record ID               |
+| createdAt           | string         | Record creation ISO timestamp   |
+| updatedAt           | string         | Last update ISO timestamp       |
+| deletedAt           | string \| null | Deletion timestamp (if deleted) |
+| userId              | number         | User identifier                 |
+| balanceUSDC         | string         | USDC balance                    |
+| lockBalanceUSDC     | string         | Locked USDC balance             |
+| balanceUSDT         | string         | USDT balance                    |
+| lockBalanceUSDT     | string         | Locked USDT balance             |
+| balanceCGPC         | number         | TC token balance                |
+| lockBalanceCGPC     | string         | Locked CGPC balance             |
+| walletProxyAddress  | string         | Proxy wallet address            |
+| walletAddress       | string         | User’s wallet address           |
+| tradeGap            | string         | Trade gap value                 |
+| lastRewardClaimedAt | string         | Last reward claim ISO timestamp |
+
+### Get New Positions
+
+Sent when your position in a market is updated.
+
+Event: `update_position`
+
+| Field          | Type   | Description                          |
+| -------------- | ------ | ------------------------------------ |
+| id             | string | Position ID                          |
+| marketId       | string | Market identifier                    |
+| amount         | number | Number of shares held                |
+| outcomeId      | string | Outcome identifier                   |
+| outcomeTitle   | string | Outcome name (e.g., "yes", "no")     |
+| eventId        | number | Event identifier                     |
+| marketQuestion | string | The market’s question                |
+| marketStatus   | enum   | Market status (ACTIVE, CLOSED, etc.) |
+| marketImage    | string | Image URL for the market             |
+| avgPrice       | number | Average price paid                   |
+| latestPrice    | number | Most recent price                    |
+| currentValue   | number | Current value of your position       |
+| betValue       | number | Total amount you’ve bet              |
+| pnl            | number | Profit and loss (decimal)            |
+| winValue       | number | Value if your outcome wins           |
+
+### Get Activity of the user
+
+Sent when a new activity (trade) is recorded for your account.
+
+Event: `update_activity`
+
+| Field          | Type           | Description                     |
+| -------------- | -------------- | ------------------------------- |
+| id             | string         | Activity ID                     |
+| amount         | number         | Amount traded                   |
+| price          | number         | Price per unit                  |
+| total          | number         | Total value of the trade        |
+| type           | enum           | Activity type (buy, sell, etc.) |
+| createdAt      | string         | ISO timestamp of the activity   |
+| txHash         | string         | Blockchain transaction hash     |
+| marketId       | string         | Market identifier               |
+| marketTitle    | string         | Market title                    |
+| marketQuestion | string         | Market’s question               |
+| marketImage    | string         | Image URL for the market        |
+| eventId        | number         | Event identifier                |
+| outcomeId      | string         | Outcome identifier              |
+| outcomeTitle   | string         | Outcome name                    |
+| outcomeType    | number         | Outcome type (numeric)          |
+| abbreviation   | string\|null   | Abbreviation (if any)           |
+| slug           | string         | Slug for the event/market       |
+| rewardToken    | string \| null | Reward token (if any)           |
+
+### Get Outcome Balance
+
+Sent when your balance or locked balance for a specific outcome token is updated. This event notifies you of changes to your holdings for a particular outcome in a market.
+
+Event: `update_outcome_balance`
+
+| Field         | Type         | Description                      |
+| ------------- | ------------ | -------------------------------- |
+| id            | string       | Outcome balance record ID        |
+| createdAt     | string       | Record creation ISO timestamp    |
+| updatedAt     | string       | Last update ISO timestamp        |
+| deletedAt     | string\|null | Deletion timestamp (if deleted)  |
+| userId        | number       | User identifier                  |
+| outcomeId     | number       | Outcome identifier               |
+| tokenId       | string       | Token identifier for the outcome |
+| balance       | number       | Current balance for this outcome |
+| lockedBalance | string       | Locked balance for this outcome  |
+
+### Get Open Orders
+
+Emitted to provide the list of open orders for a user in a specific market.
+
+| Field                     | Type        | Description                          |
+| ------------------------- | ----------- | ------------------------------------ |
+| id                        | string      | Order ID                             |
+| market\_id                | number      | Market ID                            |
+| orders\_address           | string      | Address associated with the order    |
+| orders\_amount            | string      | Total order amount                   |
+| orders\_filled\_amount    | string      | Amount already filled                |
+| orders\_outcome\_type     | number      | Outcome type (e.g., 0 = No, 1 = Yes) |
+| orders\_price             | string      | Order price                          |
+| orders\_remaining\_amount | string      | Remaining amount to be filled        |
+| orders\_side              | number      | Order side (0 = buy, 1 = sell)       |
+| orders\_status            | number      | Status code of the order             |
+| orders\_expired           | null/number | Expiry timestamp or null             |
+| orders\_type              | number      | Type of order                        |
+| outcome\_id               | number      | Outcome ID                           |
+| outcome\_title            | string      | Outcome title                        |
+| orders\_total             | string      | Total value of the order             |
+| market\_image             | string      | URL to market image                  |

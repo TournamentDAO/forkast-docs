@@ -1,0 +1,109 @@
+---
+title: "Examples"
+---
+
+These TypeScript examples show common Forkast client flows: authenticate with a signed message, place and manage orders, cancel in bulk, and redeem positions. Each snippet is ready to drop into a script and highlights the minimum inputs you need.
+
+## Place Bulk Orders
+
+Authenticates, submits multiple orders in one request (up to 5), then fetches open orders and cancels a specific order by its ID.
+
+```typescript
+import { AccountService, OrderService, Network } from "@forkastgg/client";
+import type { LoginResponse, BulkOrderInput } from "@forkastgg/client";
+
+const network = Network.MAINNET;
+const apiKey = process.env.TEST_API_KEY ?? "";
+const privateKey = process.env.TEST_PRIVATE_KEY ?? "";
+const wallet = process.env.TEST_WALLET ?? "";
+const proxyWallet = process.env.TEST_PROXY_WALLET ?? "";
+
+async function main() {
+  const accountService = new AccountService(network, apiKey);
+  const orderService = new OrderService(network, apiKey);
+
+  const login: LoginResponse = await accountService.loginWithPrivateKey(privateKey);
+  const { accessToken } = login;
+
+  const orders: BulkOrderInput[] = [
+    { tokenId: "TOKEN_ID_HERE", side: 0, price: 0.78, amount: 86 },
+    { tokenId: "TOKEN_ID_HERE", side: 0, price: 0.79, amount: 86 },
+    { tokenId: "TOKEN_ID_HERE", side: 0, price: 0.8, amount: 86 },
+  ];
+
+  const bulk = await orderService.placeBulkOrders(
+    orders,
+    { wallet, proxy_wallet: proxyWallet, private_key: privateKey },
+    accessToken
+  );
+
+  console.log("bulk", bulk);
+
+  const all = await orderService.getAllOrders(wallet, 123, accessToken);
+  const first = all.orderResult?.data?.[0];
+  if (first) {
+    const cancel = await orderService.cancelOrder(String(first.orders_id), accessToken);
+    console.log("cancel", cancel);
+  }
+}
+
+main().catch(console.error);
+```
+
+## Redeem All Positions
+
+Authenticates, loads resolved positions, builds a redeem payload for up to 10 markets, and submits a single redeem transaction for all.
+
+```typescript
+import { AccountService, MarketStatus, Network } from "@forkastgg/client";
+import type { LoginResponse } from "@forkastgg/client";
+
+const network = Network.MAINNET;
+const apiKey = process.env.TEST_API_KEY ?? "";
+const privateKey = process.env.TEST_PRIVATE_KEY ?? "";
+const proxyWallet = process.env.TEST_PROXY_WALLET ?? "";
+
+async function main() {
+  const accountService = new AccountService(network, apiKey);
+
+  const login: LoginResponse = await accountService.loginWithPrivateKey(privateKey);
+  const { accessToken } = login;
+
+  const positions = await accountService.getPositions(
+    accessToken,
+    1,
+    10,
+    MarketStatus.RESOLVED
+  );
+
+  const redeemData = (positions.results ?? [])
+    .map((p: any) => {
+      const marketId = Number(p.marketId ?? p.market_id);
+      const resolvedAddress = String(p.resolvedAddress ?? p.resolved_address ?? "");
+      const questionId = String(p.questionId ?? p.question_id ?? "");
+      const outcomeType = Number(p.outcomeType ?? p.outcome_type);
+      if (!marketId || !resolvedAddress || !questionId || Number.isNaN(outcomeType)) {
+        return null;
+      }
+      return { marketId, resolvedAddress, questionId, outcomeType };
+    })
+    .filter(Boolean)
+    .slice(0, 10);
+
+  if (redeemData.length === 0) {
+    console.log("No redeemable positions.");
+    return;
+  }
+
+  const redeem = await accountService.redeemAllPositions(
+    accessToken,
+    redeemData,
+    proxyWallet,
+    privateKey
+  );
+
+  console.log(redeem);
+}
+
+main().catch(console.error);
+```

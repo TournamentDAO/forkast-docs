@@ -1,0 +1,52 @@
+---
+title: "Redeem Positions By Markets"
+---
+
+Redeems winning positions across one or more markets using a single multisend transaction.
+
+```typescript
+import { ForkastSDK, Network, MarketStatus } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+
+const { accessToken } = await accountService.loginWithPrivateKey("YOUR_PRIVATE_KEY");
+
+const positions = await accountService.getPositions(
+  accessToken,
+  1,
+  10,
+  MarketStatus.RESOLVED
+);
+
+const redeemData = (positions.results || []).slice(0, 10).map((p: any) => ({
+  marketId: p.marketId,
+  resolvedAddress: p.resolvedAddress,
+  questionId: p.questionId,
+  outcomeType: p.outcomeType, // 1 = YES, 0 = NO
+}));
+
+if (redeemData.length === 0) {
+  console.log("No redeemable positions");
+} else {
+  const redeemResponse = await accountService.redeemAllPositions(
+    accessToken,
+    redeemData,
+    "YOUR_PROXY_WALLET_ADDRESS",
+    "YOUR_PRIVATE_KEY"
+  );
+}
+```
+
+**Parameters**
+
+| **Field**   | **Type**       | **Required** | **Description**             |
+| ----------- | -------------- | ------------ | --------------------------- |
+| accessToken | string         | Yes          | Token from login response   |
+| redeemData  | IRedeemData\[] | Yes          | Array of `IRedeemData` type |
+| proxyWallet | string         | Yes          | proxy wallet address        |
+| privateKey  | MarketStatus   | Yes          | Owner private key           |
+
+<Warning>
+  `redeemData`length must be between 1 and 10.
+</Warning>

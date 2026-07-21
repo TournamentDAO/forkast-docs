@@ -1,0 +1,96 @@
+---
+title: "Order Book"
+---
+
+## What Is an Order Book?
+
+An **Order Book** is a ledger that lists all buy and sell orders for a specific market, organized by price. The order book on Forkast is centralized for efficiency and transparency, with trades being matched offchain and settled onchain. It displays the following key components:
+
+- **Buy Orders (Green Side)**: Represent bids - prices that traders are willing to pay for an asset.
+- **Sell Orders (Red Side)**: Represent asks - prices that traders are willing to accept for an asset.
+
+The gap between the highest bid and the lowest ask is called the **Spread**, indicating the liquidity and competitiveness of the market. See an order book example below. 
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/BfQ5kZXv5zvsF0nULAi52_image.png)
+
+## Example: A Market and Its Order Book
+
+
+
+**Example Market**: *"Top Gaming Chain by Market Cap on Dec 31"*
+
+In this market, participants trade "Ronin-Yes" shares, predicting whether Ronin will be the top gaming blockchain by a specified date.
+
+### Sample Order Book
+
+| **Bids (Buyers)**  | **Asks (Sellers)** |
+| ------------------ | ------------------ |
+| $0.70 - 90 shares  | $0.72 - 1 shares   |
+| $0.60 - 100 shares | $0.80 - 1 shares   |
+| $0.50 - 90 shares  | $0.90 - 1 shares   |
+| $0.40 - 90 shares  |                    |
+
+- **Bids (Green)**: Traders are willing to pay up to $0.70 for 90 shares of **Yes**.
+- **Asks (Red)**: Sellers are asking for $0.72 to sell shares of **No**.
+- **Spread**: The difference between the highest bid ($0.70) and the lowest ask ($0.72).
+
+## Types of Orders
+
+Forkast supports two types of orders:
+
+### 1. Market Orders
+
+- **Definition**: Execute trades immediately by matching with the best available prices in the order book.
+- **Example**:
+  - A trader places a market order to buy 60 shares of **Ronin** **Yes**.
+  - The system matches the order with the first corresponding ask: 60 shares at $0.60.
+
+### 2. Limit Orders
+
+- **Definition**: Specify a maximum price for buying or a minimum price for selling, which may not execute immediately if no match is found.
+- **Example**:
+  - A trader places a limit order to buy 75 shares of **Ronin** **Yes** at $0.50.
+  - The order remains on the order book until a seller matches the price.
+
+## Order Matching
+
+Orders are matched based on the following rules:
+
+1. **Price Priority**: Buy orders with higher bid prices are matched with sell orders having lower ask prices.
+   - Example: A buy order at $0.60 will match a sell order at $0.55 first.
+2. **Time Priority**: If multiple orders have the same price, the system prioritizes the earliest placed order.
+3. **Refunds for Price Differences**: If a buy order price exceeds the matched sell order price, the buyer is refunded the difference.
+   - Example: Buyer bids $0.70, seller asks $0.65 → Buyer pays $0.65, and the $0.05 difference is refunded.
+4. **Order Completion**:
+   - **Market Orders**: Any unmatched amount is canceled and refunded.
+   - **Limit Orders**: Remaining unmatched amounts stay on the order book until fulfilled or canceled.
+
+## Managing and Canceling Orders
+
+Open orders are your orders that have **not** been **matched** **yet**. They are displayed inside a market for which the order is opened, and under the tab **Open Orders**. From this place, you can cancel any open order. 
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/XNiUxD4kuRF8s_xo1Ow9l_image.png)
+
+Positions that you hold inside a market are shown on the same place, under the **My** **Positions** tab. These refer to previously **matched orders. **
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/q5i1xDFPHwkuA4pPKNj7k_image.png)
+
+All positions and open orders across all markets can be viewed and managed from the **Portfolio** page.
+
+![](https://api.archbee.com/api/optimize/9iBxGyOic4cRFh1ToOVqV/YySEi3nDRKK4mBnUn_0ly_image.png)
+
+### Canceling Open Orders
+
+- To cancel an open order, click the Buy/Sell next to the order in the positions section of the market.
+- Once canceled, the collateral is immediately refunded to your account.
+
+## Lifecycle of an Order
+
+1. **Placement**: A user places a market or limit order, which enters the order book.
+2. **Matching**: The system matches the order based on price and time priority rules.
+3. **Execution**:
+   - Market orders execute immediately, matching with the best available price.
+   - Limit orders execute when a matching order meets the specified price.
+4. **Settlement**: Completed orders are recorded onchain for transparency.
+
+Forkast's order book ensures fast matching and execution, with detailed management tools. The efficient lifecycle and comprehensive matching rules make it easy for traders to engage confidently in prediction markets.

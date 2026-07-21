@@ -10,7 +10,7 @@
   },
   "api": {
     "openapi": [
-      "/openapi/example-api.yaml"
+      "/openapi/forkast-api.yaml"
     ],
     "examples": {
       "languages": [
@@ -27,60 +27,231 @@
     }
   },
   "navbar": {
+    "links": [
+      {
+        "label": "Forkast",
+        "href": "https://forkast.gg"
+      }
+    ],
     "primary": {
       "type": "button",
-      "label": "Get Started",
-      "href": "/introduction"
+      "label": "Start Trading",
+      "href": "https://forkast.gg"
     }
   },
   "navigation": {
     "tabs": [
       {
-        "tab": "Docs",
+        "tab": "Knowledge Center",
         "icon": "book-open",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Getting Started",
             "icon": "rocket",
             "pages": [
-              "introduction",
-              "quickstart"
+              "knowledge-center/overview",
+              "knowledge-center/table-of-content",
+              "knowledge-center/introduction",
+              "knowledge-center/sign-up-on-forkast",
+              "knowledge-center/fee-structure",
+              "knowledge-center/profile-page"
             ]
           },
           {
-            "group": "Writing Content",
-            "icon": "pen",
+            "group": "Platform Mechanics",
             "pages": [
-              "writing/pages",
-              "writing/components",
-              "writing/code-blocks"
-            ]
+              "knowledge-center/platform-mechanics",
+              "knowledge-center/platform-mechanics/trading-credits-tc",
+              "knowledge-center/platform-mechanics/markets-and-events",
+              "knowledge-center/platform-mechanics/order-book",
+              "knowledge-center/platform-mechanics/order-matching-mechanism",
+              "knowledge-center/platform-mechanics/price-suggesting-rules",
+              "knowledge-center/platform-mechanics/trading-wallets",
+              "knowledge-center/platform-mechanics/conditional-tokens-framework",
+              {
+                "group": "Smart Contracts",
+                "pages": [
+                  "knowledge-center/platform-mechanics/smart-contracts",
+                  "knowledge-center/platform-mechanics/smart-contracts/security"
+                ]
+              }
+            ],
+            "icon": "gears"
           },
           {
-            "group": "API Pages",
-            "icon": "plug",
+            "group": "Platform Rewards",
+            "pages": [
+              "knowledge-center/platform-rewards",
+              {
+                "group": "Liquidity Incentives",
+                "pages": [
+                  "knowledge-center/platform-rewards/liquidity-incentives",
+                  "knowledge-center/platform-rewards/liquidity-incentives/liquidity-rewards-in-depth",
+                  "knowledge-center/platform-rewards/liquidity-incentives/liquidity-calculation-equations"
+                ]
+              },
+              "knowledge-center/platform-rewards/leaderboard-rewards",
+              "knowledge-center/platform-rewards/quests",
+              "knowledge-center/platform-rewards/trading-credit-codes",
+              "knowledge-center/platform-rewards/referral-system-how-it-works",
+              {
+                "group": "Staking And Loot Boxes",
+                "pages": [
+                  "knowledge-center/platform-rewards/staking-and-loot-boxes",
+                  "knowledge-center/platform-rewards/staking-and-loot-boxes/calculating-expected-value-ev",
+                  "knowledge-center/platform-rewards/staking-and-loot-boxes/open-claim-trade"
+                ]
+              }
+            ],
+            "icon": "gift"
+          },
+          {
+            "group": "Help and Policies",
+            "icon": "circle-question",
             "pages": [
               {
-                "page": "api-reference/openapi-example",
-                "title": "OpenAPI Example"
+                "group": "FAQs",
+                "pages": [
+                  "knowledge-center/faqs",
+                  "knowledge-center/faqs/wallet-errors-faq",
+                  "knowledge-center/faqs/trading-errors-faq"
+                ]
               },
-              "api-reference/request-response-examples"
+              "knowledge-center/refund-policy",
+              "knowledge-center/cancelled-markets",
+              "knowledge-center/security-best-practices"
             ]
           }
         ]
       },
       {
-        "tab": "Components",
-        "icon": "puzzle-piece",
+        "tab": "Developer Docs",
+        "icon": "code",
         "groups": [
           {
-            "group": "Built-In Components",
-            "icon": "puzzle-piece",
+            "group": "Getting Started",
+            "icon": "rocket",
             "pages": [
-              "components/cards",
-              "components/callouts",
-              "components/tabs-and-accordions",
-              "components/steps"
+              "developers/overview",
+              "developers/glossary",
+              "developers/mcp-server-integration"
+            ]
+          },
+          {
+            "group": "Forkast SDK Integration Guide",
+            "pages": [
+              "developers/sdk-guide",
+              {
+                "group": "Account",
+                "pages": [
+                  "developers/sdk-guide/account",
+                  "developers/sdk-guide/account/authenticate-with-key",
+                  "developers/sdk-guide/account/approve-trading-credits",
+                  "developers/sdk-guide/account/get-positions-by-market-status",
+                  "developers/sdk-guide/account/redeem-positions-by-markets",
+                  "developers/sdk-guide/account/get-portfolio-stats"
+                ]
+              },
+              {
+                "group": "Market",
+                "pages": [
+                  "developers/sdk-guide/market",
+                  "developers/sdk-guide/market/get-all-events",
+                  "developers/sdk-guide/market/get-event-data",
+                  "developers/sdk-guide/market/get-orderbook",
+                  "developers/sdk-guide/market/get-token-prices"
+                ]
+              },
+              {
+                "group": "Order",
+                "pages": [
+                  "developers/sdk-guide/order",
+                  "developers/sdk-guide/order/get-orders",
+                  "developers/sdk-guide/order/place-single-order",
+                  "developers/sdk-guide/order/place-bulk-orders",
+                  "developers/sdk-guide/order/cancel-all-orders-by-market",
+                  "developers/sdk-guide/order/cancel-specific-order"
+                ]
+              },
+              "developers/sdk-guide/balance",
+              "developers/sdk-guide/rate-limits",
+              "developers/sdk-guide/examples",
+              "developers/sdk-guide/create-order-signature",
+              "developers/sdk-guide/changelog"
+            ],
+            "icon": "cube"
+          },
+          {
+            "group": "Websockets",
+            "pages": [
+              "developers/websockets",
+              "developers/websockets/market-updates",
+              "developers/websockets/user-updates"
+            ],
+            "icon": "bolt"
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "icon": "plug",
+        "groups": [
+          {
+            "group": "Auth",
+            "pages": [
+              "api-reference/auth/login-with-signed-message"
+            ]
+          },
+          {
+            "group": "User",
+            "pages": [
+              "api-reference/user/get-user-profile",
+              "api-reference/user/get-user-profit",
+              "api-reference/user/get-user-trade-volume",
+              "api-reference/user/get-user-traded-count"
+            ]
+          },
+          {
+            "group": "Balances",
+            "pages": [
+              "api-reference/balances/get-user-balances",
+              "api-reference/balances/get-outcome-balances"
+            ]
+          },
+          {
+            "group": "Markets",
+            "pages": [
+              "api-reference/markets/get-event-by-slug",
+              "api-reference/markets/list-events",
+              "api-reference/markets/get-order-book",
+              "api-reference/markets/get-token-prices"
+            ]
+          },
+          {
+            "group": "Categories",
+            "pages": [
+              "api-reference/categories/list-categories"
+            ]
+          },
+          {
+            "group": "Orders",
+            "pages": [
+              "api-reference/orders/get-orders",
+              "api-reference/orders/cancel-order-by-id",
+              "api-reference/orders/cancel-all-orders-by-outcome-id",
+              "api-reference/orders/cancel-all-orders-by-market-id",
+              "api-reference/orders/place-single-order",
+              "api-reference/orders/place-bulk-orders"
+            ]
+          },
+          {
+            "group": "Positions",
+            "pages": [
+              "api-reference/positions/get-positions",
+              "api-reference/positions/get-signature-discount",
+              "api-reference/positions/redeem-positions",
+              "api-reference/positions/split-position",
+              "api-reference/positions/merge-position"
             ]
           }
         ]

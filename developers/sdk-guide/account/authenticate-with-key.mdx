@@ -1,0 +1,43 @@
+---
+title: "Authenticate with Key"
+---
+
+Authenticates a user by signing a predefined message with their wallet private key. The SDK sends the wallet address, signature, and message to Forkast and returns an **access token** used for authenticated API calls.
+
+```typescript
+import { ForkastSDK, Network, LoginResponse } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+
+// Step 1: Load existing Forkast wallet key
+const privateKey = getStoredPrivateKey(); // Must have been created manually
+
+if (!privateKey) {
+  throw new Error(
+    "Forkast wallet not found. Complete sign-up manually on the platform first."
+  );
+}
+
+// Step 2: Login using Forkast wallet private key
+const loginResponse = await accountService.loginWithPrivateKey(privateKey);
+const accessToken = loginResponse.accessToken;
+
+console.log("Access Token:", accessToken);
+```
+
+**Parameters**
+
+| **Field** | **Type** | **Required** | **Description**            |
+| --------- | -------- | ------------ | -------------------------- |
+| `key`     | string   | Yes          | Private Key of your wallet |
+
+<Info>
+  Note:
+
+  1. The user must complete the Forkast wallet sign-up on the Forkast platform. Bots cannot create wallets automatically. 
+  2. The private key must be securely stored and accessible for login. Keyless wallets are **not supported** at this time. 
+  3. Social and Email Login methods are **not allowed** for automation.
+  4. A valid Forkast API key must be set in the environment variables.
+  5. The `accessToken` returned in `LoginResponse` is required for all authenticated API calls. Store it securely and pass it as the `accessToken` argument when calling protected service methods.
+</Info>

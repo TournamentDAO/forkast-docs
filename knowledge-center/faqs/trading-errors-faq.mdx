@@ -1,0 +1,127 @@
+---
+title: "Trading Errors FAQ"
+---
+
+## Common Order Errors
+
+### "Amount/Shares Required" or "Must be Greater than 0"
+
+This error appears when you haven't entered an amount or entered zero. Make sure to:
+
+- Enter a valid number for your order
+- Use positive numbers only
+- Include the amount you want to trade
+
+### "Minimum is 1 share" or "Minimum 1 shares for limit orders"
+
+All orders must be for at least 1 share. This ensures meaningful market participation. For buy orders, adjust your amount so that amount ÷ price ≥ 1 share.
+
+### "Insufficient balance"
+
+You're trying to place an order that exceeds your available balance. To fix this:
+
+- For buy orders: Add more funds to your account or reduce your order size
+- For sell orders: Make sure you have enough shares to sell
+
+### "Minimum buy order value should $0.50"
+
+- At the minimum, the total value of an order must be above 50 cents. 
+
+### "You can only buy $x.y"
+
+- The total $ amount/value the user can hold in 1 market is capped at $5000. 
+- If user tries to execute orders beyond this cap, the UI would show them the difference i.e. the value they can still execute ($.xy)
+
+
+
+## Limit Order Specific
+
+### "Limit price is required" or "Limit price must be greater than 0"
+
+When placing a limit order, you must:
+
+- Enter a specific price
+- Use a price greater than zero
+- Include the price you're willing to buy/sell at
+
+### "Expiration time is in the past."
+
+The expiration time you've set for your limit order is in the past. Choose a future time for your order to remain valid.
+
+## Market Status Errors
+
+### "No matching order found in the order book. Please try again later."
+
+This occurs with market orders when there are no matching orders available. Try:
+
+- Placing a limit order instead
+- Waiting for more market participants
+- Adjusting your price point
+
+### "Cannot place order because event is inactive/deleted"
+
+The market you're trying to trade on is no longer active. This can happen if:
+
+- The event has concluded
+- The market has been deleted
+- The market has been paused
+
+Refresh your page to see the current market status.
+
+## Technical Issues
+
+### "User rejected request. Make sure your browser is allowing popups."
+
+This happens when you (or your browser) decline the wallet signature request. To place orders:
+
+- Allow popups in your browser
+- Accept the signature request in your wallet
+
+### "A signing error occurred, possibly due to a duplicated order. Please try again."
+
+There was an issue with the order signature. This can happen if:
+
+- The same order was submitted twice within a short time frame and the first one was not processed properly
+- There were connection issues
+- Your wallet encountered an error
+
+Try submitting your order again.
+
+### "Failed to submit trade."
+
+There was an issue when submitting your trade. This can happen if:
+
+- Your wallet failed to broadcast the transaction
+- The transaction was not accepted by the network
+
+Try submitting your order again.
+
+## Size and Balance Limits
+
+### "You can only buy \[amount]"
+
+Each market has a maximum size limit to ensure market stability. If you see this:
+
+- Reduce your order size
+- Split your order into smaller amounts
+
+## Geographic Restrictions
+
+### Trading Unavailability Notice
+
+Trading is not available to users who are:
+
+- Residents of the **United States, Singapore, France, Taiwan, China, Thailand, the Cayman Islands, Cuba, Iran, North Korea, Russia **&#x61;nd **Syria** and all sanctioned countries.
+
+Please review our [Terms of Service](https://forkast.gg/user-agreement) for complete details on trading restrictions.
+
+## Still Having Issues?
+
+If you encounter any other errors or need assistance:
+
+- Refresh your page
+- Try using the Chrome browser as it offers the best experience 
+- Check your internet connection
+- Contact support if issues persist
+
+Remember to always trade responsibly and within your means. Market conditions can change rapidly, and all trades carry risk.

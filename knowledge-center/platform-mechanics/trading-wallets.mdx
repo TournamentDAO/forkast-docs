@@ -1,0 +1,21 @@
+---
+title: "Trading Wallets"
+---
+
+**TLDR: Trading wallets let you transact without needing $ETH token to pay gas fees or manually approve each market, saving both time and money.**
+
+## What Are Trading Wallets?
+
+When you first use Forkast to trade, you will be prompted to activate a **Trading Wallet**. This is a specialized smart contract wallet deployed to the Arbitrum blockchain as a **1-of-1 multisig**, fully controlled by your linked wallet (e.g., Metamask Wallet or another compatible wallet). The Trading Wallet securely stores your positions (ERC1155 tokens) and stablecoins (e.g., USDC or USDT as ERC20 tokens) used for trading.
+
+***
+
+## Why Use Trading (Proxy) Wallets?
+
+Trading Wallets, sometimes called a Proxy wallet, enable Forkast to offer a seamless and improved user experience by handling complex onchain interactions in a simplified manner. 
+
+Normally, a trade involves paying gas twice: first to approve a market and then to execute the transaction. Without proxy wallets, you’d have to own $ETH to cover these transaction costs. With proxy wallets, transactions are submitted via a relayer that covers the transaction fees, eliminating the need for you to approve each market or pay transaction fees directly. Key benefits include:
+
+1. **Atomic Transactions**: Multi-step transactions, such as depositing funds and placing trades, are executed in a single atomic operation, reducing errors and improving efficiency.
+2. **Gas-Free Transactions**: By utilizing relayers on the gas station network, Trading Wallets allow users to complete transactions without needing to directly pay for gas fees.
+3. **Secure Asset Storage**: All user positions and funds are stored securely within the Trading Wallet, ensuring safety while providing full control to the owner wallet.

@@ -1,0 +1,3156 @@
+openapi: 3.0.3
+info:
+  title: Forkast API
+  description: REST API for the Forkast prediction-market platform.
+  version: 1.0.0
+servers:
+- url: https://mgapi.forkast.gg/api/v1
+  description: Mainnet
+tags:
+- name: Auth
+- name: User
+- name: Markets
+- name: Balances
+- name: Positions
+- name: Orders
+- name: Categories
+paths:
+  /auth:
+    post:
+      summary: Login with signed message
+      tags:
+      - Auth
+      operationId: login_with_signed_message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: Wallet address
+                  example: '0x1234567890123456789012345678901234567890'
+                signature:
+                  type: string
+                  description: Signed message from wallet
+                message:
+                  type: string
+                  description: Must be 'Welcome to Forkast!'
+                  example: Welcome to Forkast!
+              required:
+              - address
+              - signature
+              - message
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  walletSalt:
+                    type: string
+                  refreshToken:
+                    type: string
+                  proxyWallet:
+                    type: string
+                required:
+                - accessToken
+                - walletSalt
+                - refreshToken
+                - proxyWallet
+        '400':
+          description: Bad request – invalid signature or payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                wrongMessage:
+                  value:
+                    statusCode: 400
+                    message: Wrong message payload. Please try again
+                    error: Bad Request
+                invalidSignature:
+                  value:
+                    statusCode: 400
+                    message: 'Invalid signature: ...'
+                    error: Bad Request
+                invalidEmail:
+                  value:
+                    statusCode: 400
+                    message: Please provide a valid email address.
+                    error: Bad Request
+        '401':
+          description: Unauthorized – session verification failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                permissionDenied:
+                  value:
+                    statusCode: 401
+                    message: User permission denied
+                    error: Unauthorized
+                fakeUser:
+                  value:
+                    statusCode: 401
+                    message: User's identity not verified
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /user/profile:
+    get:
+      summary: Get user profile
+      tags:
+      - User
+      operationId: get_user_profile
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  bio:
+                    type: string
+                  avatar:
+                    type: string
+                  wallet:
+                    type: string
+                  proxyWallet:
+                    type: string
+                  hasActiveProxyWallet:
+                    type: integer
+                    example: 0
+                  isRegionWarningChecked:
+                    type: integer
+                    example: 0
+                  referralCode:
+                    type: string
+                  isReferred:
+                    type: string
+                    description: '(format: boolean,null)'
+                  referredAt:
+                    type: string
+                    description: '(format: string,null)'
+                  isWonMarket:
+                    type: integer
+                    example: 0
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /user/profit:
+    get:
+      summary: Get user profit
+      tags:
+      - User
+      operationId: get_user_profit
+      parameters:
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: integer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Profit response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  pnl:
+                    type: number
+                  roi:
+                    type: number
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /trades/volume:
+    get:
+      summary: Get user trade volume
+      tags:
+      - User
+      operationId: get_user_trade_volume
+      parameters:
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: integer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Volume response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  volume:
+                    type: number
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":400,"message":"User ID is required","error":"Bad Request"}'
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /activities/count-traded:
+    get:
+      summary: Get user traded count
+      tags:
+      - User
+      operationId: get_user_traded_count
+      parameters:
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: integer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Count traded response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  countTraded:
+                    type: number
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":400,"message":"User ID is required","error":"Bad Request"}'
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /markets/get-by-slug/{slug}:
+    get:
+      summary: Get event by slug
+      tags:
+      - Markets
+      operationId: get_event_by_slug
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Event response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 0
+                      createdAt:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      startDate:
+                        type: string
+                      endDate:
+                        type: string
+                      image:
+                        type: string
+                      resolutionSource:
+                        type: string
+                      volume:
+                        type: string
+                      resolvedOn:
+                        type: string
+                        description: '(format: string,null)'
+                      categoryIds:
+                        type: array
+                        items: {}
+                      fixtureId:
+                        type: string
+                        description: '(format: string,null)'
+                      isFavorite:
+                        type: integer
+                        example: 0
+                      markets:
+                        type: array
+                        items:
+                          type: integer
+                          example: 0
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":404,"message":"Not found event","error":"Not Found"}'
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /orderbook:
+    get:
+      summary: Get order book
+      tags:
+      - Markets
+      operationId: get_order_book
+      parameters:
+      - name: marketId
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: outcomeType
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: <p>0 = Yes, 1 = No</p>
+      responses:
+        '200':
+          description: Order book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  asks:
+                    type: array
+                    items:
+                      type: string
+                  bids:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Bad request – invalid input or business rule violation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":400,"message":"Bad Request","error":"Bad Request"}'
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /token-price:
+    get:
+      summary: Get token prices
+      tags:
+      - Markets
+      operationId: get_token_prices
+      parameters:
+      - name: marketId
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: side
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Token prices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: integer
+                      example: 0
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /markets:
+    get:
+      summary: List events
+      tags:
+      - Markets
+      operationId: list_events
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: status[]
+        in: query
+        required: false
+        schema:
+          type: object
+      responses:
+        '200':
+          description: Events response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: integer
+                      example: 0
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /balance/{tokenId}/outcomes:
+    get:
+      summary: Get outcome balances
+      tags:
+      - Balances
+      operationId: get_outcome_balances
+      parameters:
+      - name: tokenId
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Outcome balance response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  deletedAt:
+                    type: string
+                    description: '(format: string,null)'
+                  userId:
+                    type: integer
+                    example: 0
+                  outcomeId:
+                    type: integer
+                    example: 0
+                  tokenId:
+                    type: string
+                  balance:
+                    type: string
+                  lockedBalance:
+                    type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /balance:
+    get:
+      summary: Get user balances
+      tags:
+      - Balances
+      operationId: get_user_balances
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Balance response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  deletedAt:
+                    type: string
+                    description: '(format: string,null)'
+                  userId:
+                    type: integer
+                    example: 0
+                  balanceUSDC:
+                    type: string
+                  lockBalanceUSDC:
+                    type: string
+                  balanceUSDT:
+                    type: string
+                  lockBalanceUSDT:
+                    type: string
+                  balanceCGPC:
+                    type: string
+                  lockBalanceCGPC:
+                    type: string
+                  walletProxyAddress:
+                    type: string
+                  walletAddress:
+                    type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /positions:
+    get:
+      summary: Get positions
+      tags:
+      - Positions
+      operationId: get_positions
+      parameters:
+      - name: page
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: sortBy
+        in: query
+        required: true
+        schema:
+          type: string
+          example: current
+      - name: sortDirection
+        in: query
+        required: true
+        schema:
+          type: string
+          example: DESC
+      - name: marketStatus
+        in: query
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Positions response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  results:
+                    type: array
+                    items: {}
+                  error:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":400,"message":"User ID is required","error":"Bad Request"}'
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /positions/signature-discount:
+    get:
+      summary: Get signature discount
+      tags:
+      - Positions
+      operationId: get_signature_discount
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Signature discount response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      signature:
+                        type: string
+                      expiration:
+                        type: integer
+                        example: 0
+                      percent:
+                        type: number
+                      address:
+                        type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /user/merge-position:
+    post:
+      summary: Merge position
+      tags:
+      - Positions
+      operationId: merge_position
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signature:
+                  type: string
+                dataSign:
+                  type: object
+                  properties:
+                    to:
+                      type: string
+                    value:
+                      type: string
+                    data:
+                      type: string
+                    operation:
+                      type: string
+                    nonce:
+                      type: string
+                  required:
+                  - to
+                  - value
+                  - data
+                  - operation
+                walletProxy:
+                  type: string
+              required:
+              - signature
+              - dataSign
+              - walletProxy
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Merge result
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                conditionIdInvalid:
+                  value:
+                    statusCode: 400
+                    message: ConditionId data invalid!
+                    error: Bad Request
+                marketNotActive:
+                  value:
+                    statusCode: 400
+                    message: Market is not active!
+                    error: Bad Request
+                outcomesNotConfigured:
+                  value:
+                    statusCode: 400
+                    message: Market outcomes not properly configured
+                    error: Bad Request
+                operationInProgress:
+                  value:
+                    statusCode: 400
+                    message: Another operation is in progress on Yes outcome or No outcome. Please try
+                      again later!
+                    error: Bad Request
+                mergeFailed:
+                  value:
+                    statusCode: 400
+                    message: Failed to merge positions
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /positions/redeem:
+    post:
+      summary: Redeem positions
+      tags:
+      - Positions
+      operationId: redeem_positions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signature:
+                  type: string
+                dataSign:
+                  type: object
+                  properties:
+                    to:
+                      type: string
+                    value:
+                      type: string
+                    data:
+                      type: string
+                    operation:
+                      type: string
+                    nonce:
+                      type: string
+                  required:
+                  - to
+                  - value
+                  - data
+                  - operation
+                walletProxy:
+                  type: string
+                marketIds:
+                  type: array
+                  items: {}
+              required:
+              - signature
+              - dataSign
+              - walletProxy
+              - marketIds
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Redeem response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  results:
+                    type: array
+                    items: {}
+                  error:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                marketNotFound:
+                  value:
+                    statusCode: 400
+                    message: Market not found
+                    error: Bad Request
+                marketNotCancelled:
+                  value:
+                    statusCode: 400
+                    message: Market is not cancelled
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /user/split-position:
+    post:
+      summary: Split position
+      tags:
+      - Positions
+      operationId: split_position
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signature:
+                  type: string
+                dataSign:
+                  type: object
+                  properties:
+                    to:
+                      type: string
+                    value:
+                      type: string
+                    data:
+                      type: string
+                    operation:
+                      type: string
+                    nonce:
+                      type: string
+                  required:
+                  - to
+                  - value
+                  - data
+                  - operation
+                walletProxy:
+                  type: string
+              required:
+              - signature
+              - dataSign
+              - walletProxy
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Split result
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                conditionIdInvalid:
+                  value:
+                    statusCode: 400
+                    message: ConditionId data invalid!
+                    error: Bad Request
+                marketNotActive:
+                  value:
+                    statusCode: 400
+                    message: Market is not active!
+                    error: Bad Request
+                outcomeInvalid:
+                  value:
+                    statusCode: 400
+                    message: Market outcome invalid!
+                    error: Bad Request
+                operationInProgress:
+                  value:
+                    statusCode: 400
+                    message: Another operation is in progress on Yes outcome or No outcome. Please try
+                      again later!
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order/cancel-order/market/all:
+    post:
+      summary: Cancel all orders by market ID
+      tags:
+      - Orders
+      operationId: cancel_all_orders_by_market_id
+      parameters:
+      - name: marketId
+        in: query
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Cancel all orders response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items: {}
+                  failed:
+                    type: array
+                    items:
+                      type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order/cancel-order/{outcomeId}/all:
+    post:
+      summary: Cancel all orders by outcome ID
+      tags:
+      - Orders
+      operationId: cancel_all_orders_by_outcome_id
+      parameters:
+      - name: outcomeId
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Cancel all orders response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items: {}
+                  failed:
+                    type: array
+                    items:
+                      type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order/cancel-order/{orderId}:
+    post:
+      summary: Cancel order by ID
+      tags:
+      - Orders
+      operationId: cancel_order_by_id
+      parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Cancel order response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                notFound:
+                  value:
+                    statusCode: 400
+                    message: Order not found
+                    error: Bad Request
+                notAuthorized:
+                  value:
+                    statusCode: 400
+                    message: Not authorized to cancel this order
+                    error: Bad Request
+                alreadyCancelled:
+                  value:
+                    statusCode: 400
+                    message: Order has been already cancelled
+                    error: Bad Request
+                processing:
+                  value:
+                    statusCode: 400
+                    message: Order is being processed. Please try again later.
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order:
+    get:
+      summary: Get orders
+      tags:
+      - Orders
+      operationId: get_orders
+      parameters:
+      - name: status
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: outcomeId
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: address
+        in: query
+        required: true
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Orders response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  orderResult:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: integer
+                          example: 0
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order/place/bulk/v1:
+    post:
+      summary: Place bulk orders
+      tags:
+      - Orders
+      operationId: place_bulk_orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orders:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - orders
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Bulk orders result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  results:
+                    type: array
+                    items:
+                      type: integer
+                      example: 0
+                  error:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                emptyOrders:
+                  value:
+                    statusCode: 400
+                    message: Orders list is empty
+                    error: Bad Request
+                tooManyOrders:
+                  value:
+                    statusCode: 400
+                    message: For place bulk orders - Max 5 orders
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /order/place/v3:
+    post:
+      summary: Place single order
+      tags:
+      - Orders
+      operationId: place_single_order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tokenId:
+                  type: string
+                side:
+                  type: integer
+                  example: 0
+                price:
+                  type: string
+                amount:
+                  type: string
+                type:
+                  type: integer
+                  example: 0
+                expiredAt:
+                  type: integer
+                  example: 0
+                order:
+                  type: object
+                  properties:
+                    salt:
+                      type: string
+                    maker:
+                      type: string
+                    signer:
+                      type: string
+                    taker:
+                      type: string
+                    tokenId:
+                      type: string
+                    makerAmount:
+                      type: string
+                    takerAmount:
+                      type: string
+                    expiration:
+                      type: string
+                    nonce:
+                      type: string
+                    feeRateBps:
+                      type: string
+                    side:
+                      type: integer
+                      example: 0
+                    signatureType:
+                      type: integer
+                      example: 0
+                    signature:
+                      type: string
+                  required:
+                  - salt
+                  - maker
+                  - signer
+                  - taker
+                  - tokenId
+                  - makerAmount
+                  - takerAmount
+                  - expiration
+                  - nonce
+                  - feeRateBps
+                  - side
+                  - signatureType
+                  - signature
+              required:
+              - tokenId
+              - side
+              - price
+              - amount
+              - type
+              - expiredAt
+              - order
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  orderResult:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: integer
+                          example: 0
+                  error:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                outcomeNotFound:
+                  value:
+                    statusCode: 400
+                    message: Outcome not found
+                    error: Bad Request
+                outcomeResolved:
+                  value:
+                    statusCode: 400
+                    message: Outcome is already resolved
+                    error: Bad Request
+                marketNotFound:
+                  value:
+                    statusCode: 400
+                    message: Market not found
+                    error: Bad Request
+                marketNotActive:
+                  value:
+                    statusCode: 400
+                    message: Market is not active
+                    error: Bad Request
+                eventDeleted:
+                  value:
+                    statusCode: 400
+                    message: Cannot place order because event is deleted. Please reload!
+                    error: Bad Request
+                eventInactive:
+                  value:
+                    statusCode: 400
+                    message: Cannot place order because event is inactive. Please reload!
+                    error: Bad Request
+                beforeStartDate:
+                  value:
+                    statusCode: 400
+                    message: Cannot place order before market start date
+                    error: Bad Request
+                userNotFound:
+                  value:
+                    statusCode: 400
+                    message: User not found
+                    error: Bad Request
+                noProxyWallet:
+                  value:
+                    statusCode: 400
+                    message: User does not have an active proxy wallet
+                    error: Bad Request
+                invalidSignature:
+                  value:
+                    statusCode: 400
+                    message: signature invalid
+                    error: Bad Request
+                duplicateSignature:
+                  value:
+                    statusCode: 400
+                    message: Cannot place order because signature already exists
+                    error: Bad Request
+                priceLimit:
+                  value:
+                    statusCode: 400
+                    message: Price must be less than 1
+                    error: Bad Request
+                feeUpdated:
+                  value:
+                    statusCode: 400
+                    message: Trading fee updated. Please reload and try again!
+                    error: Bad Request
+                minimumOrder:
+                  value:
+                    statusCode: 400
+                    message: Minimum order value should be 1 $
+                    error: Bad Request
+        '401':
+          description: Unauthorized – missing, invalid, or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+              examples:
+                GENERATED:
+                  value:
+                    statusCode: 400
+                    message: Bad Request
+                    error: Bad Request
+                invalidToken:
+                  value:
+                    statusCode: 401
+                    message: Invalid token
+                    error: Unauthorized
+                expiredToken:
+                  value:
+                    statusCode: 401
+                    message: Expired token
+                    error: Unauthorized
+                missingBearer:
+                  value:
+                    statusCode: 401
+                    message: 'Authorization: Bearer <token> header missing'
+                    error: Unauthorized
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+  /category:
+    get:
+      summary: List categories
+      tags:
+      - Categories
+      operationId: list_categories
+      responses:
+        '200':
+          description: Categories response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '429':
+          description: Too many requests – rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":429,"message":"Too Many Requests","error":"Too Many Requests"}'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    description: HTTP status code
+                    example: 400
+                  message:
+                    type: string
+                    description: Error message
+                    example: Bad Request
+                  error:
+                    type: string
+                    description: Error type
+                    example: Bad Request
+                description: Standard error response from NestJS
+                example: '{"statusCode":500,"message":"Internal Server Error","error":"Internal Server
+                  Error"}'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,156 @@
+---
+title: "Create Order Signature"
+---
+
+Orders on Forkast use **EIP-712 typed data signing**. The signature proves the order was authorized by the wallet owner without exposing the private key.
+
+## Step 1: Construct the EIP-712 Domain
+
+```javascript
+{
+  "name": "CTF Exchange",
+  "version": "1",
+  "chainId": 42161,
+  "verifyingContract": "0x2D7aa09fe8a9Af205aD6E0Fef1441834c4250cdc"
+}
+```
+
+## Step 2: Define the Order Type Structure
+
+```javascript
+{
+  "Order": [
+    { "name": "salt",          "type": "uint256" },
+    { "name": "maker",         "type": "address" },
+    { "name": "signer",        "type": "address" },
+    { "name": "taker",         "type": "address" },
+    { "name": "tokenId",       "type": "uint256" },
+    { "name": "makerAmount",   "type": "uint256" },
+    { "name": "takerAmount",   "type": "uint256" },
+    { "name": "expiration",    "type": "uint256" },
+    { "name": "nonce",         "type": "uint256" },
+    { "name": "feeRateBps",    "type": "uint256" },
+    { "name": "side",          "type": "uint8" },
+    { "name": "signatureType", "type": "uint8" }
+  ]
+}
+```
+
+## Step 3: Build the Order Message
+
+| Field         | Type    | Description                                                                                                                              |
+| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| salt          | uint256 | A unique value per order. Generate by hashing order fields + random entropy + timestamp using SHA-256, then convert to a uint256integer. |
+| maker         | address | The **proxy wallet** (Gnosis Safe) address — not the EOA.                                                                                |
+| signer        | address | The user's **EOA wallet** address (the key that signs).                                                                                  |
+| taker         | address | 0x0000000000000000000000000000000000000000 (public order, anyone can fill).                                                              |
+| tokenId       | uint256 | The CTF ERC-1155 token ID of the outcome being traded.                                                                                   |
+| makerAmount   | uint256 | See calculation below. Scaled to 6 decimals (USDC precision).                                                                            |
+| takerAmount   | uint256 | See calculation below. Scaled to 6 decimals.                                                                                             |
+| expiration    | uint256 | "0" (no expiration).                                                                                                                     |
+| nonce         | uint256 | "0".                                                                                                                                     |
+| feeRateBps    | uint256 | "0".                                                                                                                                     |
+| side          | uint8   | 0 = Buy, 1= Sell.                                                                                                                        |
+| signatureType | uint8   | 3 (EIP-712 with Gnosis Safe proxy — signer is EOA, maker is proxy).                                                                      |
+
+### Calculating makerAmount and takerAmount
+
+Amounts are scaled by 1e6(USDC has 6 decimals):
+
+**Buy order** (side = 0)
+
+```javascript
+makerAmount = floor(amount × price × 1,000,000)   // TC you pay
+takerAmount = floor(amount × 1,000,000)            // outcome tokens you receive
+```
+
+**Sell order **(side = 1)
+
+```javascript
+makerAmount = floor(amount × 1,000,000)            // outcome tokens you sell
+takerAmount = floor(amount × price × 1,000,000)    // TC you receive
+```
+
+**Example**
+
+> makerAmount = floor(50 × 0.80 × 1,000,000) = 40,000,000
+> takerAmount = floor(50 × 1,000,000)         = 50,000,000
+
+## Step 4: Generate a Unique Salt
+
+```javascript
+import crypto from "crypto";
+
+const raw = [
+  signerAddress.toLowerCase(),
+  makerAddress.toLowerCase(),
+  tokenId,
+  side,
+  type,
+  price,
+  amount,
+  (BigInt(Date.now()) * BigInt(1_000_000)).toString(),
+  crypto.randomBytes(16).toString("hex"),
+].join("|");
+
+const digest = crypto.createHash("sha256").update(raw).digest("hex");
+const salt = BigInt("0x" + digest).toString();
+```
+
+## Step 5: Sign with EIP-712
+
+```javascript
+import { ethers } from "ethers";
+
+const domain = {
+  name: "CTF Exchange",
+  version: "1",
+  chainId: 42161,  // or 421614 for testnet
+  verifyingContract: "0x2D7aa09fe8a9Af205aD6E0Fef1441834c4250cdc",
+};
+
+const types = {
+  Order: [
+    { name: "salt", type: "uint256" },
+    { name: "maker", type: "address" },
+    { name: "signer", type: "address" },
+    { name: "taker", type: "address" },
+    { name: "tokenId", type: "uint256" },
+    { name: "makerAmount", type: "uint256" },
+    { name: "takerAmount", type: "uint256" },
+    { name: "expiration", type: "uint256" },
+    { name: "nonce", type: "uint256" },
+    { name: "feeRateBps", type: "uint256" },
+    { name: "side", type: "uint8" },
+    { name: "signatureType", type: "uint8" },
+  ],
+};
+
+const message = {
+  salt: salt,
+  maker: proxyWalletAddress,
+  signer: walletAddress,
+  taker: ethers.ZeroAddress,
+  tokenId: tokenId,
+  makerAmount: "40000000",
+  takerAmount: "50000000",
+  expiration: "0",
+  nonce: "0",
+  feeRateBps: "0",
+  side: 0,
+  signatureType: 3,
+};
+
+const wallet = new ethers.Wallet(privateKey);
+const signature = await wallet.signTypedData(domain, types, message);
+```
+
+## Validation Rules
+
+| Field         | Constraint                                 |
+| ------------- | ------------------------------------------ |
+| side          | Must be 0 (Buy) or 1 (Sell)                |
+| amount        | Must be > 0, max 2 decimal places          |
+| price         | Must be > 0 and \< 1, max 2 decimal places |
+| signer        | Must match the private key used to sign    |
+| signatureType | Must be 3 (EOA signer + Gnosis Safe maker) |

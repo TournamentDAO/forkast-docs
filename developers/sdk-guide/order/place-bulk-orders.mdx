@@ -1,0 +1,50 @@
+---
+title: "Place Bulk Orders"
+---
+
+Places up to 5 limit orders in one request. Each order is validated and signed before submission. Use it to place multiple buys/sells efficiently.
+
+```typescript
+import {
+  ForkastSDK,
+  Network,
+  BulkOrderInput,
+  BulkOrderResponse,
+} from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.TESTNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+const orderService = sdk.getOrderService();
+
+const { accessToken } = await accountService.loginWithPrivateKey(
+  "YOUR_PRIVATE_KEY"
+);
+
+const orders: BulkOrderInput[] = [
+  { tokenId: "TOKEN_ID_1", side: 0, price: 0.45, amount: 10 },
+  { tokenId: "TOKEN_ID_2", side: 1, price: 0.55, amount: 5 },
+];
+
+const result: BulkOrderResponse = await orderService.placeBulkOrders(
+  orders,
+  {
+    wallet: "0xYourWallet",
+    proxy_wallet: "0xYourProxyWallet",
+    private_key: "0xYourPrivateKey",
+  },
+  accessToken
+);
+```
+
+**Parameters**
+
+| **Field**     | **Type**          | **Required** | **Description**                              |
+| ------------- | ----------------- | ------------ | -------------------------------------------- |
+| `orders`      | BulkOrderInput\[] | Yes          | Array of order inputs (max 5)                |
+| `account`     | Account           | Yes          | Wallet Address, Proxy Wallet and Private Key |
+| `accessToken` | string            | Yes          | Access Token received from login response    |
+
+<Warning>
+  - Minimum order value is 0.5, ensure `price × amount ≥ 0.5` for each order in the array
+  - Make sure [Approve Trading Credits](/developers/sdk-guide/account/approve-trading-credits) step is completed before placing the order.
+</Warning>

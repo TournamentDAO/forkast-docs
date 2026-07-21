@@ -1,0 +1,87 @@
+---
+title: "Forkast SDK Integration Guide"
+---
+
+Welcome to the Forkast SDK quickstart guide. This document will walk you through the process of authenticating your account, exploring available markets, and executing your first trade.
+
+## Installation
+
+<Info>
+  The Forkast SDK supports **Node.js (20.x or later)** and **Python(3.12 or later**).
+</Info>
+
+<CodeGroup>
+  ```typescript TypeScript
+  npm install @forkastgg/client
+  ```
+
+  ```python Python
+  pip install forkast-py-client
+  ```
+</CodeGroup>
+
+## Usage
+
+### Initialize the SDK
+
+To start interacting with the Forkast platform, you must initialize the SDK and get access to the available services. 
+
+<CodeGroup>
+  ```typescript TypeScript
+  import { ForkastSDK, Network } from "@forkastgg/client";
+
+  // Initialize the SDK
+  const sdk = new ForkastSDK(Network.MAINNET,"YOUR_API_KEY");
+  ```
+
+  ```python Python
+  import asyncio
+  from forkast_py_client import ForkastSDK, Network
+
+  async def main():
+      async with ForkastSDK(Network.MAINNET, "YOUR_API_KEY") as sdk:
+          market_service = sdk.get_market_service()
+          event = await market_service.get_event_data(35)
+          print(event)
+
+  asyncio.run(main())
+  ```
+</CodeGroup>
+
+### Access the services
+
+Once the SDK is initialized, you can access several high-level services. These services are used to interact with prediction markets, user accounts, balances, and orders. 
+
+<CodeGroup>
+  ```typescript TypeScript
+  // Get service instances
+  const marketService = sdk.getMarketService();
+  const accountService = sdk.getAccountService();
+  const balancesService = sdk.getBalancesService();
+  const orderService = sdk.getOrderService();
+  ```
+
+  ```python Python
+  market_service = sdk.get_market_service()
+  account_service = sdk.get_account_service()
+  balances_service = sdk.get_balances_service()
+  order_service = sdk.get_order_service()
+  ```
+</CodeGroup>
+
+## Services
+
+Understanding the different functions and data structures returned by the Forkast SDK is key to building reliable apps. Below are the core interfaces you’ll encounter when interacting with the sdk. 
+
+1. [Account](/developers/sdk-guide/account) 
+2. [Balance](/developers/sdk-guide/balance) 
+3. [Market](/developers/sdk-guide/market) 
+4. [Order](/developers/sdk-guide/order) 
+
+## Examples
+
+Find the [Examples](/developers/sdk-guide/examples) here.
+
+## License
+
+MIT

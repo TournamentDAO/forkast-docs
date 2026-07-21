@@ -1,0 +1,131 @@
+---
+title: "Liquidity Calculation Equations"
+---
+
+### Liquidity Rewards Program
+
+Liquidity providers on Forkast earn rewards by posting resting limit orders, automatically qualifying them for the incentive program. The primary goal of this program is to foster a vibrant and liquid marketplace by encouraging:
+
+- Robust liquidity across all markets.
+- Consistent liquidity throughout a market's lifecycle.
+- Balanced quoting close to the adjusted market midpoint.
+- Increased trading activity.
+- Deterrence of exploitative behaviors.
+
+Inspired by the dYdX liquidity reward system, Forkast adapts this methodology for binary contract markets with distinct order books. Modifications include the removal of staking requirements, adjustments for order utility relative to depth, and market-specific reward allocation. Rewards are distributed daily at midnight UTC directly to the provider's addresses.
+
+***
+
+### Methodology
+
+Liquidity providers earn rewards based on their contributions to market liquidity, assessed using metrics like two-sided depth, participation in complementary markets, and proximity to the adjusted market midpoint. Rewards are determined by a participant's share of **Qepoch** in each market, scaled by the total rewards for that market.
+
+***
+
+### Variables and Key Definitions
+
+| **Variable** | **Description**                                      |
+| ------------ | ---------------------------------------------------- |
+| **S**        | Order position scoring function.                     |
+| **v**        | Maximum spread from midpoint (in cents).             |
+| **s**        | Spread from size-cutoff-adjusted midpoint.           |
+| **b**        | In-game multiplier.                                  |
+| **m**        | Market under consideration.                          |
+| **m′**       | Complementary market (e.g., NO if m = YES).          |
+| **n**        | Trader index.                                        |
+| **u**        | Sample index.                                        |
+| **c**        | Scaling factor (default is 3.0).                     |
+| **Qone**     | Point total for one side of the order book.          |
+| **Qtwo**     | Point total for the opposite side of the order book. |
+| **BidSize**  | Share-denominated quantity of bids.                  |
+| **AskSize**  | Share-denominated quantity of asks.                  |
+
+***
+
+### Equations
+
+**Quadratic Scoring Function**
+Calculates the score for an order based on its position relative to the adjusted midpoint and the maximum spread:
+
+```tex
+S(v, s) = \left(\frac{v - s}{v}\right)^2 \cdot b
+```
+
+**First Market Side Score**
+Computes the score for bids and complementary asks:
+
+```tex
+Q_{one} = S(v, Spread_{m1}) \cdot BidSize_{m1} + S(v, Spread_{m2}) \cdot BidSize_{m2} + S(v, Spread_{m'1}) \cdot AskSize_{m'1} + S(v, Spread_{m'2}) \cdot AskSize_{m'2}
+```
+
+**Second Market Side Score**
+Computes the score for asks and complementary bids:
+
+```tex
+Q_{two} = S(v, Spread_{m1}) \cdot AskSize_{m1} + S(v, Spread_{m2}) \cdot AskSize_{m2} + S(v, Spread_{m'1}) \cdot BidSize_{m'1} + S(v, Spread_{m'2}) \cdot BidSize_{m'2}
+```
+
+**Two-Sided Liquidity Boost**
+Scores liquidity by comparing Qone and Qtwo, rewarding single-sided liquidity at a reduced rate:
+
+- For midpoints in \[0.10,0.90]\[0.10,0.90]:
+
+```tex
+Q_{min} = \max(\min(Q_{one}, Q_{two}), \max(\frac{Q_{one}}{c}, \frac{Q_{two}}{c}))
+```
+
+- For midpoints outside \[0.10,0.90]\[0.10,0.90]:
+
+```tex
+Q_{min} = \min(Q_{one}, Q_{two})
+```
+
+**Normalized Sample Score**
+Normalizes the score of a market maker within a sample:
+
+```tex
+Q_{normal} = \frac{Q_{min}}{\sum_{n=1}^N Q_{min_n}}
+```
+
+**Epoch Score**
+Aggregates normalized scores over all samples in an epoch:
+
+```tex
+Q_{epoch} = \sum_{u=1}^{10,080} Q_{normal_u}
+```
+
+**Final Score**
+Normalizes a trader’s epoch score and calculates the share of rewards:
+
+```tex
+Q_{final} = \frac{Q_{epoch}}{\sum_{n=1}^N Q_{epoch_n}}
+```
+
+***
+
+### Scoring Examples
+
+- **Market Configuration**: Adjusted midpoint = 0.50; max spread = 3 cents.
+- **Trader’s Orders for Qone**:
+  - 100q bid @ 0.49 (spread = 1 cent).
+  - 200q bid @ 0.48 (spread = 2 cents).
+  - 100q ask @ 0.51 in complementary market.
+
+```tex
+Q_{one} = \left(\frac{3-1}{3}\right)^2 \cdot 100 + \left(\frac{3-2}{3}\right)^2 \cdot 200 + \left(\frac{3-1}{3}\right)^2 \cdot 100
+```
+
+- **Trader’s Orders for Qtwo**:
+  - 100q ask @ 0.485 (spread = 1.5 cents).
+  - 100q bid @ 0.48 in complementary market.
+  - 200q ask @ 0.505 (spread = 0.5 cents).
+
+```tex
+Q_{two} = \left(\frac{3-1.5}{3}\right)^2 \cdot 100 + \left(\frac{3-2}{3}\right)^2 \cdot 100 + \left(\frac{3-0.5}{3}\right)^2 \cdot 200
+```
+
+***
+
+### Conclusion
+
+The liquidity rewards program rewards participants based on their contributions to market stability and depth, incentivizing balanced, two-sided liquidity near the market midpoint. This approach ensures a fair and vibrant marketplace, aligning with Forkast’s goals for active and sustainable trading.

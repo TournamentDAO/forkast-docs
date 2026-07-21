@@ -1,0 +1,46 @@
+---
+title: "Get Orderbook"
+---
+
+Fetches the order book for a specific market outcome. It provides the live bid/ask depth for a specific outcome, which is useful for showing market liquidity and choosing the best price level before placing orders.
+
+```typescript
+import { ForkastSDK, Network } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+const marketService = sdk.getMarketService();
+
+const orderBook = await marketService.getOrderBook(123, 1, 0);
+```
+
+**Parameters**
+
+| **Field**   | **Type** | **Required** | **Description**                |
+| ----------- | -------- | ------------ | ------------------------------ |
+| marketId    | number   | Yes          | Market identifier              |
+| outcomeId   | number   | Yes          | Trade side (0 = buy, 1 = sell) |
+| outcomeType | number   | Yes          | Outcome type                   |
+
+**Response**
+
+```typescript
+interface OrderBook {
+  asks: Array<{ price: number; size: number }>;
+  bids: Array<{ price: number; size: number }>;
+}
+
+// Example
+/*
+{
+  "asks": [{ "price": 0.75, "size": 100 }],
+  "bids": [{ "price": 0.68, "size": 80 }]
+}
+*/
+```
+
+Key Fields
+
+| **Field** | **Description**                             |
+| --------- | ------------------------------------------- |
+| `asks`    | Sell offers with price and available shares |
+| `bids`    | Buy offers with price and available shares  |

@@ -1,0 +1,70 @@
+---
+title: "Balance"
+---
+
+This section documents the core interfaces used when working with user balances in ForkastSDK.
+
+## Functions
+
+### Get Balance
+
+```typescript
+import { ForkastSDK, Network, BalanceResponse } from "@forkastgg/client";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+const balanceService = sdk.getBalanceService();
+
+const { accessToken } = await accountService.loginWithPrivateKey(
+  "YOUR_PRIVATE_KEY"
+);
+
+const balances:BalanceResponse = await balanceService.getBalances(accessToken);
+
+console.log(balances);
+```
+
+**Parameters**
+
+| **Field**     | **Type** | **Required** | **Description**                           |
+| ------------- | -------- | ------------ | ----------------------------------------- |
+| `accessToken` | string   | Yes          | Access Token received from login response |
+
+## Types
+
+### Balance
+
+Represents a user's wallet and proxy wallet balances across different stablecoins and platform tokens.
+
+```typescript
+interface BalanceResponse {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  userId: number;
+  balanceUSDC: string;
+  lockBalanceUSDC: string;
+  balanceUSDT: string;
+  lockBalanceUSDT: string;
+  balanceCGPC: string;
+  lockBalanceCGPC: string;
+  walletProxyAddress: string;
+  walletAddress: string;
+}
+```
+
+**Key Fields**
+
+| **Field**         | **Type** | **Description**                                      |
+| ----------------- | -------- | ---------------------------------------------------- |
+| `id`              | string   |                                                      |
+| `createdAt`       | string   | ISO timestamp of when the balance record was created |
+| `uppdatedAt`      | string   | ISO timestamp of last update                         |
+| `deletedAt`       | string   | ISO timestamp if the record is soft-deleted          |
+| `userId`          | number   | ID of the user                                       |
+| `balanceUSDC`     | number   | - 1 = Yes outcome
+- 0 = No outcome                   |
+| `lockBalanceUSDC` | number   | Price per unit of outcome token                      |
+| `balanceCGPC`     | number   | Number of shares to buy/sell                         |
+| `lockBalanceCGPC` | number   | Total value (price \* amount)                        |

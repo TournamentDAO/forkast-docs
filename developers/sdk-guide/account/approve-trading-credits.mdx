@@ -1,0 +1,44 @@
+---
+title: "Approve Trading Credits"
+---
+
+Signs a Gnosis Safe multisend transaction that approves the Trading Credits (TC) token and Conditional Tokens for trading. It returns a `TokenApprovalResponse`containing the signature and transaction payload to submit, or `undefined`if approval is already sufficient.
+
+```typescript
+import { ForkastSDK, Network } from "@forkastgg/client";
+import { Wallet } from "ethers";
+
+const sdk = new ForkastSDK(Network.MAINNET, "YOUR_API_KEY");
+const accountService = sdk.getAccountService();
+
+const signer = new Wallet("YOUR_PRIVATE_KEY");
+
+const approval = await accountService.approveMaxPlatformCreditsForProxyWallet(
+  signer,
+  "YOUR_PROXY_WALLET_ADDRESS",
+  10_000_000 // optional buyAmount
+);
+
+if (!approval) {
+  console.log("Already approved");
+} else {
+  console.log("Signature:", approval.signature);
+  console.log("Payload:", approval.dataSign);
+}
+```
+
+**Parameters**
+
+| **Field**          | **Type** | **Required** | **Description**                 |
+| ------------------ | -------- | ------------ | ------------------------------- |
+| signer             | string   | Yes          | Public address of the wallet    |
+| walletProxyAddress | string   | Yes          | Trading wallet address created  |
+| buyAmount          | number   | No           | Amount of tokens to approve     |
+
+<Info>
+  The signer must be the `owner`wallet of the proxy, and should have a provider attached (the SDK will attach one if missing). Use the returned `TokenApprovalResponse` payload in your transaction submission flow.
+</Info>
+
+<Warning>
+  `buyAmount`is optional. If omitted, the SDK uses `MAX_BUY_AMOUNT = 10_000_000` and approves the maximum amount.
+</Warning>

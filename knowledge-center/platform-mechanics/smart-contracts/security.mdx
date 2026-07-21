@@ -1,0 +1,26 @@
+---
+title: "Security"
+---
+
+At Forkast, we place the highest priority on security across every aspect of our platform. To maintain its integrity and reliability, we leverage a combination of trusted, open-source contracts that have undergone extensive audits and proven their robustness within the industry.
+
+***
+
+Our smart contract security architecture is built on the following components:
+
+1. **ConditionalTokens**
+   We utilize the Gnosis [ConditionalTokens contract](https://github.com/gnosis/conditional-tokens-contracts) for managing positions, or "prediction tokens," in our prediction markets. This contract facilitates the creation of conditional tokens. *The audit report for this contract can be found *[here](https://github.com/gnosis/conditional-tokens-contracts/tree/master/docs/audit)*. *
+2. **GnosisSafe**
+   For the management of proxy accounts, we rely on the [GnosisSafe](https://github.com/safe-global/safe-smart-account), a widely used multi-signature wallet system. This contract ensures that funds and assets are managed securely, with checks and balances in place to prevent unauthorized access. *The audit reports can be found *[here](https://github.com/safe-global/safe-smart-account/blob/main/docs/audit_1_3_0.md)*. *
+3. **CTFExchange**
+   The [CTFExchange](https://github.com/Polymarket/ctf-exchange) contract is used for facilitating exchanges within our platform. This exchange contract enables secure and decentralized trades between users. It is designed to support the liquidity and seamless execution of market transactions, while ensuring security and scalability. *The audit report is available *[here](https://github.com/Polymarket/ctf-exchange/blob/main/audit/ChainSecurity_Polymarket_Exchange_audit.pdf)*. *
+4. **OpenZeppelin ERC20 and AccessControl**
+   For the creation and management of our Platform Credits token, we utilize the [OpenZeppelin ERC20](https://github.com/OpenZeppelin/openzeppelin-contracts) standard and the [AccessControl library](https://github.com/OpenZeppelin/openzeppelin-contracts) for role-based access control. These widely recognized and secure libraries enable the implementation of standard ERC20 functionality, while AccessControl allows us to manage administrative roles securely, ensuring only authorized entities can execute critical actions such as token minting and transfer management. *The audit reports can be found *[here](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/audits)*. *
+5. The **MultiSend** contract
+   Developed by Gnosis/ConsenSys and audited for security, streamlines transaction batching by enabling multiple operations to be executed in a single call. It processes encoded transactions via `call` or `delegatecall`, ensuring either all succeed or none are executed, optimizing gas costs and simplifying complex workflows in decentralized applications. T*he audit report can be found *[here](https://github.com/safe-global/safe-smart-account/blob/main/docs/Safe_Audit_Report_1_4_0.pdf)*. *
+6. Trading Credits token
+   The **Trading Credit** token is the main asset of **Forkast**. It allows users to deposit/convert USDC into credits and vice versa. Transfers are restricted to whitelisted contracts within the system and from user EOA accounts to their **Trading Wallet**. *The audit report can be found *[here](https://drive.google.com/file/d/1UXfEGxdamos_RRWeWnw12Aj0B3fUIQSz/view?usp=sharing)*. *
+
+***
+
+By integrating these robust and secure open-source contracts, Forkast ensures that our platform operates with a high level of security, reducing the risk of vulnerabilities and ensuring a safe environment for all users participating in our markets.
