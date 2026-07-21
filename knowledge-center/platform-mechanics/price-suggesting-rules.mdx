@@ -12,31 +12,31 @@ On the market page, the Rule of Price-Suggesting governs how prices are suggeste
 When placing a buy order, the system will suggest the following prices:
 
 1. **Market Order**:
-   - Display the **lowest Ask (selling) price** in the order book at the current time.
+ - Display the **lowest Ask (selling) price** in the order book at the current time.
 2. **Limit Order**:
-   - **Yes Market**:
+ - **Yes Market**:
      - Display the lower value between:
-       1. The **lowest Ask (selling) price of YES** in the order book at the current time.
-       2. The **highest Bid (buying) price of NO** in the order book at the current time.
-   - **No Market**:
+ 1. The **lowest Ask (selling) price of YES** in the order book at the current time.
+ 2. The **highest Bid (buying) price of NO** in the order book at the current time.
+ - **No Market**:
      - Display the lower value between:
-       1. The **lowest Ask (selling) price of NO** in the order book at the current time.
-       2. The **highest Bid (buying) price of YES** in the order book at the current time.
+ 1. The **lowest Ask (selling) price of NO** in the order book at the current time.
+ 2. The **highest Bid (buying) price of YES** in the order book at the current time.
 
 ### For Sellers
 
 When placing a sell order, the system will suggest the following prices:
 
 1. **Market Order**:
-   - Display the **highest Bid (buying) price** in the order book at the current time.
+ - Display the **highest Bid (buying) price** in the order book at the current time.
 2. **Limit Order**:
-   - **Yes Market**:
+ - **Yes Market**:
      - Display the higher value between:
-       1. The **highest Bid (buying) price of YES** in the order book at the current time.
-       2. The **lowest Ask (selling) price of NO** in the order book at the current time.
-   - **No Market**:
+ 1. The **highest Bid (buying) price of YES** in the order book at the current time.
+ 2. The **lowest Ask (selling) price of NO** in the order book at the current time.
+ - **No Market**:
      - Display the higher value between:
-       1. The **highest Bid (buying) price of NO** in the order book at the current time.
-       2. The **lowest Ask (selling) price of YES** in the order book at the current time.
+ 1. The **highest Bid (buying) price of NO** in the order book at the current time.
+ 2. The **lowest Ask (selling) price of YES** in the order book at the current time.
 
 The Rule of Price-Suggesting ensures that traders have clear and competitive price recommendations for both buying and selling, based on the real-time state of the order book. By referencing the lowest asks and highest bids dynamically, this framework aligns user actions with market conditions, enabling informed decision-making and streamlined trading.

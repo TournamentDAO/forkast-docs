@@ -11,7 +11,7 @@ To ensure platform stability and fair usage, the Forkast enforces the following 
 
 All API functions are subject to a global rate limit of:
 
-- **1,000 requests per minute per IP** 
+- **1,000 requests per minute per IP**
 
 If this limit is exceeded, additional requests may be throttled or rejected until the rate window resets.
 
@@ -19,10 +19,10 @@ If this limit is exceeded, additional requests may be throttled or rejected unti
 
 The following endpoints have additional per-second limits:
 
-- **Place Single Order** – 30 requests per second 
-- **Cancel Single Order** – 30 requests per second 
-- **Place Bulk Order** – 8 requests per second 
-- **Cancel by Market ID** – 5 requests per second 
+- **Place Single Order** – 30 requests per second
+- **Cancel Single Order** – 30 requests per second
+- **Place Bulk Order** – 8 requests per second
+- **Cancel by Market ID** – 5 requests per second
 
 These limits apply independently of the global per-minute limit.
 

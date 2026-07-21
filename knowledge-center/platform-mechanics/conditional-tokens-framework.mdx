@@ -5,7 +5,7 @@ description: >-
   outcomes using ERC1155 tokens for splitting, merging, and redeeming positions.
 ---
 
-## Overview
+## 🧭 Overview
 
 Forkast utilizes a robust **Conditional Tokens Framework (CTF)** implemented in the smart contract system to tokenize the outcomes of prediction markets. This framework is based on Gnosis's Conditional Tokens architecture, enabling the creation, trading, and resolution of outcome tokens in a secure and efficient manner. At its core, CTF leverages ERC1155 standards to represent binary outcome tokens backed by collateral (e.g., USDC or PC).
 
@@ -13,21 +13,21 @@ The smart contract provides the functionality to prepare, split, merge, and rede
 
 ***
 
-## Key Features
+## ⭐ Key Features
 
 1. **Outcome Tokenization**
    Market outcomes are represented as distinct ERC1155 tokens corresponding to binary outcomes like “YES” and “NO.” These tokens are backed by collateral and are derived from specific conditions.
 2. **Dynamic Operations**
-   - **Prepare Conditions**: Create and initialize conditions tied to markets.
-   - **Split Positions**: Divide collateral into binary outcome tokens for trading.
-   - **Merge Positions**: Recombine binary tokens into collateral.
-   - **Redeem Payouts**: Exchange winning outcome tokens for collateral after a market resolves.
+ - **Prepare Conditions**: Create and initialize conditions tied to markets.
+ - **Split Positions**: Divide collateral into binary outcome tokens for trading.
+ - **Merge Positions**: Recombine binary tokens into collateral.
+ - **Redeem Payouts**: Exchange winning outcome tokens for collateral after a market resolves.
 3. **Efficient Token Management**
    The framework ensures efficient management of collateral and tokens while providing flexibility for traders to adjust positions based on market conditions.
 
 ***
 
-## How It Works: High-Level Operations
+## ⚙️ How It Works: High-Level Operations
 
 ### 1. Preparing a Condition
 
@@ -96,7 +96,7 @@ The redemption process involves:
 
 ***
 
-## Key Data Structures and Utilities
+## 🧱 Key Data Structures and Utilities
 
 1. **Condition ID (**`conditionId`**)**
    A unique identifier for a market condition derived using:
@@ -116,7 +116,7 @@ The redemption process involves:
 
 ***
 
-## Why This Framework?
+## 🤔 Why This Framework?
 
 1. **Flexibility**: Supports dynamic token operations (split, merge, redeem) for evolving market conditions.
 2. **Security**: Ensures transparent handling of collateral and payouts through smart contracts.

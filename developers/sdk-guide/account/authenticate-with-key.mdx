@@ -31,7 +31,7 @@ console.log("Access Token:", accessToken);
 
 **Parameters**
 
-| **Field** | **Type** | **Required** | **Description**            |
+| **Field** | **Type** | **Required** | **Description** |
 | --------- | -------- | ------------ | -------------------------- |
 | `key`     | string   | Yes          | Private Key of your wallet |
 
@@ -39,8 +39,8 @@ console.log("Access Token:", accessToken);
   Note:
 
   1. The user must complete the Forkast wallet sign-up on the Forkast platform. Bots cannot create wallets automatically. 
-  2. The private key must be securely stored and accessible for login. Keyless wallets are **not supported** at this time. 
-  3. Social and Email Login methods are **not allowed** for automation.
+ 2. The private key must be securely stored and accessible for login. Keyless wallets are **not supported** at this time.
+ 3. Social and Email Login methods are **not allowed** for automation.
   4. A valid Forkast API key must be set in the environment variables.
   5. The `accessToken` returned in `LoginResponse` is required for all authenticated API calls. Store it securely and pass it as the `accessToken` argument when calling protected service methods.
 </Info>

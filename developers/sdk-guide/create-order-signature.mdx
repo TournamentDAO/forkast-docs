@@ -7,7 +7,7 @@ description: >-
 
 Orders on Forkast use **EIP-712 typed data signing**. The signature proves the order was authorized by the wallet owner without exposing the private key.
 
-## Step 1: Construct the EIP-712 Domain
+## 1️⃣ Step 1: Construct the EIP-712 Domain
 
 ```javascript
 {
@@ -18,7 +18,7 @@ Orders on Forkast use **EIP-712 typed data signing**. The signature proves the o
 }
 ```
 
-## Step 2: Define the Order Type Structure
+## 2️⃣ Step 2: Define the Order Type Structure
 
 ```javascript
 {
@@ -39,13 +39,13 @@ Orders on Forkast use **EIP-712 typed data signing**. The signature proves the o
 }
 ```
 
-## Step 3: Build the Order Message
+## 3️⃣ Step 3: Build the Order Message
 
 | Field         | Type    | Description                                                                                                                              |
 | ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | salt          | uint256 | A unique value per order. Generate by hashing order fields + random entropy + timestamp using SHA-256, then convert to a uint256integer. |
-| maker         | address | The **proxy wallet** (Gnosis Safe) address — not the EOA.                                                                                |
-| signer        | address | The user's **EOA wallet** address (the key that signs).                                                                                  |
+| maker | address | The **proxy wallet** (Gnosis Safe) address — not the EOA. |
+| signer | address | The user's **EOA wallet** address (the key that signs). |
 | taker         | address | 0x0000000000000000000000000000000000000000 (public order, anyone can fill).                                                              |
 | tokenId       | uint256 | The CTF ERC-1155 token ID of the outcome being traded.                                                                                   |
 | makerAmount   | uint256 | See calculation below. Scaled to 6 decimals (USDC precision).                                                                            |
@@ -67,7 +67,7 @@ makerAmount = floor(amount × price × 1,000,000)   // TC you pay
 takerAmount = floor(amount × 1,000,000)            // outcome tokens you receive
 ```
 
-**Sell order **(side = 1)
+**Sell order** (side = 1)
 
 ```javascript
 makerAmount = floor(amount × 1,000,000)            // outcome tokens you sell
@@ -79,7 +79,7 @@ takerAmount = floor(amount × price × 1,000,000)    // TC you receive
 > makerAmount = floor(50 × 0.80 × 1,000,000) = 40,000,000
 > takerAmount = floor(50 × 1,000,000)         = 50,000,000
 
-## Step 4: Generate a Unique Salt
+## 4️⃣ Step 4: Generate a Unique Salt
 
 ```javascript
 import crypto from "crypto";
@@ -100,7 +100,7 @@ const digest = crypto.createHash("sha256").update(raw).digest("hex");
 const salt = BigInt("0x" + digest).toString();
 ```
 
-## Step 5: Sign with EIP-712
+## 5️⃣ Step 5: Sign with EIP-712
 
 ```javascript
 import { ethers } from "ethers";
@@ -148,7 +148,7 @@ const wallet = new ethers.Wallet(privateKey);
 const signature = await wallet.signTypedData(domain, types, message);
 ```
 
-## Validation Rules
+## ✅ Validation Rules
 
 | Field         | Constraint                                 |
 | ------------- | ------------------------------------------ |

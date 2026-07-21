@@ -7,7 +7,7 @@ description: >-
 
 This is the recommended way to receive real‑time updates such as orderbook changes, market price updates, positions, orders.
 
-## Base URL
+## 🌐 Base URL
 
 > wss\://mgapi.forkast.gg
 
@@ -50,7 +50,7 @@ socket.on("orderbook_1676_0", (data) => {
   If no token is provided, you will connect as a guest and only receive public events.
 </Warning>
 
-## Rooms
+## 🚪 Rooms
 
 You can subscribe to specific `rooms` to receive scoped updates.
 
@@ -70,7 +70,7 @@ Use `joinRoom` to subscribe to any of the following:
 socket.emit("joinRoom", "event_123");
 ```
 
-## Topics
+## 📡 Topics
 
 ### Static Topics
 

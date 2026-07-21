@@ -18,7 +18,7 @@ const orderBook = await marketService.getOrderBook(123, 1, 0);
 
 **Parameters**
 
-| **Field**   | **Type** | **Required** | **Description**                |
+| **Field** | **Type** | **Required** | **Description** |
 | ----------- | -------- | ------------ | ------------------------------ |
 | marketId    | number   | Yes          | Market identifier              |
 | outcomeId   | number   | Yes          | Trade side (0 = buy, 1 = sell) |
@@ -43,7 +43,7 @@ interface OrderBook {
 
 Key Fields
 
-| **Field** | **Description**                             |
+| **Field** | **Description** |
 | --------- | ------------------------------------------- |
 | `asks`    | Sell offers with price and available shares |
 | `bids`    | Buy offers with price and available shares  |
