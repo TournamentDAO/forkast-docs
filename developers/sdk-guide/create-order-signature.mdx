@@ -77,11 +77,7 @@ takerAmount = floor(amount × price × 1,000,000)    // TC you receive
 **Example** — buying 50 shares at a price of 0.80:
 
 ```tex
-\text{makerAmount} = \lfloor 50 \times 0.80 \times 1{,}000{,}000 \rfloor = 40{,}000{,}000
-```
-
-```tex
-\text{takerAmount} = \lfloor 50 \times 1{,}000{,}000 \rfloor = 50{,}000{,}000
+\text{makerAmount} = \text{floor}(50 \times 0.80 \times 1000000) = 40000000 \newline \text{takerAmount} = \text{floor}(50 \times 1000000) = 50000000
 ```
 
 ## 4️⃣ Step 4: Generate a Unique Salt
