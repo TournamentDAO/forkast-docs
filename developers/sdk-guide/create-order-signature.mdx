@@ -74,10 +74,15 @@ makerAmount = floor(amount × 1,000,000)            // outcome tokens you sell
 takerAmount = floor(amount × price × 1,000,000)    // TC you receive
 ```
 
-**Example**
+**Example** — buying 50 shares at a price of 0.80:
 
-> makerAmount = floor(50 × 0.80 × 1,000,000) = 40,000,000
-> takerAmount = floor(50 × 1,000,000)         = 50,000,000
+```tex
+\text{makerAmount} = \lfloor 50 \times 0.80 \times 1{,}000{,}000 \rfloor = 40{,}000{,}000
+```
+
+```tex
+\text{takerAmount} = \lfloor 50 \times 1{,}000{,}000 \rfloor = 50{,}000{,}000
+```
 
 ## 4️⃣ Step 4: Generate a Unique Salt
 

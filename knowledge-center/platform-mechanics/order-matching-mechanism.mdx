@@ -25,13 +25,21 @@ Forkast employs a robust order matching system that prioritizes efficiency and f
  **Example**:
    - Buyer A: 0.6 Yes (30 shares)
    - Buyer B: 0.4 No (30 shares)
-   - Matching: Tokens are minted as Yes price (0.6) + No price (0.4) = 1 TC.
+   - Matching: Tokens are minted for both buyers:
+
+   ```tex
+   \text{Yes price } (0.6) + \text{No price } (0.4) = 1 \text{ TC}
+   ```
 3. **Merge Matching** (Priority 3)
    If no normal match is available, the system matches two asks from "Yes" and "No" sellers, provided their combined prices equal 1 TC. Tokens are merged, and sellers are paid in TC.
  **Example**:
    - Seller A: 0.7 Yes (30 shares)
    - Seller B: 0.3 No (30 shares)
-   - Matching: Orders are merged as Yes price (0.7) + No price (0.3) = 1 TC.
+   - Matching: Orders are merged and sellers are paid in TC:
+
+   ```tex
+   \text{Yes price } (0.7) + \text{No price } (0.3) = 1 \text{ TC}
+   ```
 
 ***
 

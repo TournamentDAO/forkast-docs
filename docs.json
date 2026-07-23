@@ -94,15 +94,7 @@
               "knowledge-center/platform-rewards/leaderboard-rewards",
               "knowledge-center/platform-rewards/quests",
               "knowledge-center/platform-rewards/trading-credit-codes",
-              "knowledge-center/platform-rewards/referral-system-how-it-works",
-              {
-                "group": "Staking And Loot Boxes",
-                "pages": [
-                  "knowledge-center/platform-rewards/staking-and-loot-boxes",
-                  "knowledge-center/platform-rewards/staking-and-loot-boxes/calculating-expected-value-ev",
-                  "knowledge-center/platform-rewards/staking-and-loot-boxes/open-claim-trade"
-                ]
-              }
+              "knowledge-center/platform-rewards/referral-system-how-it-works"
             ],
             "icon": "gift"
           },
